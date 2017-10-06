@@ -14,6 +14,8 @@
         android:background="@color/md_dark_appbar"
         android:windowActionBarOverlay="true" />
 
+
+
     <ScrollView
         android:id="@+id/aboutAct_scrollView"
         android:layout_width="match_parent"

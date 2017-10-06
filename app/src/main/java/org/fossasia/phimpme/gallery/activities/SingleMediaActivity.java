@@ -51,9 +51,12 @@ import com.yalantis.ucrop.UCrop;
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.base.SharedMediaActivity;
 import org.fossasia.phimpme.base.ThemedActivity;
+import org.fossasia.phimpme.data.local.AccountDatabase;
 import org.fossasia.phimpme.data.local.DatabaseHelper;
+import org.fossasia.phimpme.data.local.FavouriteImagesModel;
 import org.fossasia.phimpme.data.local.ImageDescModel;
 import org.fossasia.phimpme.editor.EditImageActivity;
+import org.fossasia.phimpme.editor.FavouritesActivity;
 import org.fossasia.phimpme.editor.FileUtils;
 import org.fossasia.phimpme.editor.utils.BitmapUtils;
 import org.fossasia.phimpme.gallery.SelectAlbumBottomSheet;
@@ -80,6 +83,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
+import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.TUMBLR;
 import static org.fossasia.phimpme.utilities.Utils.promptSpeechInput;
 
 /**
@@ -113,6 +117,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
     private Uri uri;
     private Realm realm;
     private DatabaseHelper databaseHelper;
+    private FavouriteImagesModel fav;
     ImageDescModel temp;
     private final int REQ_CODE_SPEECH_INPUT = 100;
     String voiceInput;
@@ -146,6 +151,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
         ButterKnife.bind(this);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         imageWidth = metrics.widthPixels;
+        realm = Realm.getDefaultInstance();
         imageHeight = metrics.heightPixels;
 
         overridePendingTransition(R.anim.media_zoom_in,0);
@@ -521,6 +527,21 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                     SnackBarHandler.show(parentView, R.string.image_invalid);
                 break;
 
+            case R.id.action_favourites:
+                uri = Uri.fromFile(new File(getAlbum().getCurrentMedia().getPath()));
+                String realpath = String.valueOf(uri.getPath());
+                realm.beginTransaction();
+                fav = realm.createObject(FavouriteImagesModel.class,
+                        realpath);
+
+                realm.commitTransaction();
+                Intent intent2 = new Intent(SingleMediaActivity.this, FavouritesActivity.class);
+                startActivity(intent2);
+                break;
+
+
+
+
             case R.id.action_use_as:
                 Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
                 if (!allPhotoMode)
@@ -662,6 +683,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                     }
                 });
                 break;
+
 
             default:
                 // If we got here, the user's action was not recognized.
