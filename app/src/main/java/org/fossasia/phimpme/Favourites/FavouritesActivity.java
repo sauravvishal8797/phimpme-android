@@ -88,7 +88,7 @@ public class FavouritesActivity extends ThemedActivity {
                 int size11 = Integer.parseInt(String.valueOf(favouritesImages.count()));
 
                 int s = Integer.parseInt(size);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Intent intent = new Intent(SingleMediaActivity.ACTION_OPEN_ALBUM, uri);
                 intent.putExtra(getString(R.string.all_photo_mode), true);
                 intent.putExtra(getString(R.string.position), index);
                 intent.putExtra(getString(R.string.allMediaSize), size11);
