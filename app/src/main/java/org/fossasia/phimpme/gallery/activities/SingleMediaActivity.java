@@ -48,10 +48,12 @@ import com.bumptech.glide.Glide;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.yalantis.ucrop.UCrop;
 
+import org.fossasia.phimpme.Favourites.FavouritesActivity;
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.base.SharedMediaActivity;
 import org.fossasia.phimpme.base.ThemedActivity;
 import org.fossasia.phimpme.data.local.DatabaseHelper;
+import org.fossasia.phimpme.data.local.FavouriteImagesModel;
 import org.fossasia.phimpme.data.local.ImageDescModel;
 import org.fossasia.phimpme.editor.EditImageActivity;
 import org.fossasia.phimpme.editor.FileUtils;
@@ -79,6 +81,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmQuery;
 
 import static org.fossasia.phimpme.utilities.Utils.promptSpeechInput;
 
@@ -89,8 +92,8 @@ import static org.fossasia.phimpme.utilities.Utils.promptSpeechInput;
 public class SingleMediaActivity extends SharedMediaActivity implements ImageAdapter.OnSingleTap {
 
     private static final String ISLOCKED_ARG = "isLocked";
-    static final String ACTION_OPEN_ALBUM = "android.intent.action.pagerAlbumMedia";
-    private static final String ACTION_REVIEW = "com.android.camera.action.REVIEW";
+    public static final String ACTION_OPEN_ALBUM = "android.intent.action.pagerAlbumMedia";
+    public static final String ACTION_REVIEW = "com.android.camera.action.REVIEW";
     private ImageAdapter adapter;
     private PreferenceUtil SP;
     private RelativeLayout ActivityBackground;
@@ -116,6 +119,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
     ImageDescModel temp;
     private final int REQ_CODE_SPEECH_INPUT = 100;
     String voiceInput;
+    private FavouriteImagesModel fav;
     EditText editTextDescription;
 
     @Nullable
@@ -146,6 +150,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
         ButterKnife.bind(this);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         imageWidth = metrics.widthPixels;
+        realm = Realm.getDefaultInstance();
         imageHeight = metrics.heightPixels;
 
         overridePendingTransition(R.anim.media_zoom_in,0);
@@ -165,14 +170,17 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
             if ((getIntent().getAction().equals(Intent.ACTION_VIEW) || getIntent().getAction().equals(ACTION_REVIEW)) && getIntent().getData() != null) {
 
                 String path = ContentHelper.getMediaPath(getApplicationContext(), getIntent().getData());
+                Log.i("ffdfdf", path);
                 pathForDescription = path;
                 File file = null;
                 if (path != null)
                     file = new File(path);
 
-                if (file != null && file.isFile())
+                if (file != null && file.isFile()) {
                     //the image is stored in the storage
                     album = new Album(getApplicationContext(), file);
+                    Log.i("ghhghgh", file.getParentFile().getName());
+                }
                 else {
                     //try to show with Uri
                     album = new Album(getApplicationContext(), getIntent().getData());
@@ -520,6 +528,28 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                 } else
                     SnackBarHandler.show(parentView, R.string.image_invalid);
                 break;
+
+            case R.id.action_favourites:
+                uri = Uri.fromFile(new File(getAlbum().getCurrentMedia().getPath()));
+                String realpath = String.valueOf(uri.getPath());
+                File file = new File(realpath);
+                String size = String.valueOf(file.length());
+                RealmQuery<FavouriteImagesModel> query = realm.where(FavouriteImagesModel.class).equalTo("path",
+                        realpath);
+                if(query.count() == 0){
+                    realm.beginTransaction();
+                    fav = realm.createObject(FavouriteImagesModel.class,
+                            realpath);
+                    fav.setSize(size);
+
+                    realm.commitTransaction();
+                    Toast.makeText(this, "Image is succesfully added in the favourites list", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(this, "Image is alredy present in the Favoourites list", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
 
             case R.id.action_use_as:
                 Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);

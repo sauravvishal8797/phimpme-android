@@ -33,6 +33,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -57,6 +58,7 @@ import android.widget.Toast;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.view.IconicsImageView;
 
+import org.fossasia.phimpme.Favourites.FavouritesActivity;
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.base.SharedMediaActivity;
 import org.fossasia.phimpme.gallery.SelectAlbumBottomSheet;
@@ -98,7 +100,7 @@ public class LFMainActivity extends SharedMediaActivity {
 
     private static String TAG = "AlbumsAct";
     private int REQUEST_CODE_SD_CARD_PERMISSIONS = 42;
-    private boolean about=false,settings=false,uploadHistory=false;
+    private boolean about=false,settings=false,uploadHistory=false,favourites=false;
     private CustomAlbumsHelper customAlbumsHelper = CustomAlbumsHelper.getInstance(LFMainActivity.this);
     private PreferenceUtil SP;
     private SecurityHelper securityObj;
@@ -572,7 +574,9 @@ public class LFMainActivity extends SharedMediaActivity {
         int spanCount = SP.getInt("n_columns_folders", 2);
         rvAlbumsDecoration = new GridSpacingItemDecoration(spanCount, Measure.pxToDp(3, getApplicationContext()), true);
         rvAlbums.addItemDecoration(rvAlbumsDecoration);
-        rvAlbums.setLayoutManager(new GridLayoutManager(this, spanCount));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount);
+        rvAlbums.setLayoutManager(gridLayoutManager);
+
 
         spanCount = SP.getInt("n_columns_media", 3);
         rvMediaDecoration = new GridSpacingItemDecoration(spanCount, Measure.pxToDp(3, getApplicationContext()), true);
@@ -622,6 +626,10 @@ public class LFMainActivity extends SharedMediaActivity {
                     intent = new Intent(LFMainActivity.this, UploadHistory.class);
                     startActivity(intent);
                     uploadHistory=false;
+                } else if(favourites){
+                    intent = new Intent(LFMainActivity.this, FavouritesActivity.class);
+                    startActivity(intent);
+                    favourites = false;
                 }
 
             }
@@ -651,7 +659,9 @@ public class LFMainActivity extends SharedMediaActivity {
             rvAlbums.removeItemDecoration(rvAlbumsDecoration);
             rvAlbumsDecoration = new GridSpacingItemDecoration(spanCount, Measure.pxToDp(3, getApplicationContext()), true);
             rvAlbums.addItemDecoration(rvAlbumsDecoration);
-            rvAlbums.setLayoutManager(new GridLayoutManager(this, spanCount));
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount, LinearLayoutManager
+                    .HORIZONTAL, false);
+            rvAlbums.setLayoutManager(gridLayoutManager);
         }
     }
 
@@ -661,7 +671,8 @@ public class LFMainActivity extends SharedMediaActivity {
             ((GridLayoutManager) rvMedia.getLayoutManager()).getSpanCount();
             rvMedia.removeItemDecoration(rvMediaDecoration);
             rvMediaDecoration = new GridSpacingItemDecoration(spanCount, Measure.pxToDp(3, getApplicationContext()), true);
-            rvMedia.setLayoutManager(new GridLayoutManager(getApplicationContext(), spanCount));
+            rvMedia.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3, LinearLayoutManager
+                    .HORIZONTAL, false));
             rvMedia.addItemDecoration(rvMediaDecoration);
         }
     }
@@ -750,6 +761,8 @@ public class LFMainActivity extends SharedMediaActivity {
         ((TextView) findViewById(R.id.Drawer_share_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_rate_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_Upload_Item)).setTextColor(color);
+        ((TextView) findViewById(R.id.Drawer_Favourite_Item)).setTextColor(color);
+
 
         /** ICONS **/
         color = getIconColor();
@@ -760,6 +773,8 @@ public class LFMainActivity extends SharedMediaActivity {
         ((IconicsImageView) findViewById(R.id.Drawer_share_Icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.Drawer_rate_Icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.Drawer_Upload_Icon)).setColor(color);
+        ((IconicsImageView) findViewById(R.id.Drawer_favourite_Icon)).setColor(color);
+
 
         // Default setting
         if(localFolder)
@@ -786,6 +801,13 @@ public class LFMainActivity extends SharedMediaActivity {
             @Override
             public void onClick(View v) {
                 uploadHistory=true;
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
+
+        findViewById(R.id.ll_drawer_favourites).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                favourites=true;
                 mDrawerLayout.closeDrawer(GravityCompat.START);
             }
         });

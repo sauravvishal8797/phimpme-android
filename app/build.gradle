@@ -17,7 +17,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         resConfigs "en"
         ndk {
-            abiFilters 'armeabi-v7a','x86'
+            abiFilters 'armeabi-v7a', 'x86'
         }
     }
 
@@ -80,7 +80,7 @@ repositories {
 
     maven { url 'https://maven.fabric.io/public' }
 
-    maven{ url "https://mvnrepository.com/artifact/com.box/box-android-sdk" }
+    maven { url "https://mvnrepository.com/artifact/com.box/box-android-sdk" }
 }
 
 
@@ -89,7 +89,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-vector-drawable:$rootProject.supportLibraryVersion"
@@ -109,6 +108,18 @@ dependencies {
     compile files('libs/flickrj-android-2.1.0.jar')
     compile project(':openCVLibrary24133')
     compile project(':pdk')
+    compile group: 'com.box', name: 'box-android-sdk', version: '4.0.8'
+    compile "com.google.android.gms:play-services-auth:$rootProject.gmsVersion"
+    compile "com.google.android.gms:play-services-plus:$rootProject.gmsVersion"
+    compile "com.google.firebase:firebase-perf:$rootProject.gmsVersion"
+    compile('com.tumblr:jumblr:0.0.11') {
+        exclude module: 'scribe'
+    }
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+
+    }
+    compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
     compile 'uz.shift:colorpicker:0.5@aar'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.koushikdutta.ion:ion:2.1.7'
@@ -130,19 +141,8 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.23.0'
     compile 'com.uphyca:stetho_realm:2.0.0'
     compile 'com.android.support:multidex:1.0.1'
-    compile group: 'com.box', name: 'box-android-sdk', version: '4.0.8'
-    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.0'
-    compile "com.google.android.gms:play-services-auth:$rootProject.gmsVersion"
-    compile "com.google.android.gms:play-services-plus:$rootProject.gmsVersion"
-    compile "com.google.firebase:firebase-perf:$rootProject.gmsVersion"
     compile 'com.daksh:loglr:1.2.1'
-    compile ('com.tumblr:jumblr:0.0.11'){
-        exclude module:'scribe'
-    }
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-
-    }
+    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.0'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 }
