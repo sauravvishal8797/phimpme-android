@@ -2,6 +2,8 @@ package org.fossasia.phimpme.gallery.activities;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.DialogInterface;
@@ -18,6 +20,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -46,6 +49,7 @@ import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -81,13 +85,20 @@ import org.fossasia.phimpme.uploadhistory.UploadHistory;
 import org.fossasia.phimpme.utilities.ActivitySwitchHelper;
 import org.fossasia.phimpme.utilities.SnackBarHandler;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import static org.fossasia.phimpme.R.string.zip;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.DATE;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.NAME;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.NUMERIC;
@@ -98,6 +109,7 @@ public class LFMainActivity extends SharedMediaActivity {
 
     private static String TAG = "AlbumsAct";
     private int REQUEST_CODE_SD_CARD_PERMISSIONS = 42;
+    private static final int BUFFER = 80000;
     private boolean about=false,settings=false,uploadHistory=false;
     private CustomAlbumsHelper customAlbumsHelper = CustomAlbumsHelper.getInstance(LFMainActivity.this);
     private PreferenceUtil SP;
@@ -113,6 +125,7 @@ public class LFMainActivity extends SharedMediaActivity {
 
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
+    private ProgressDialog progressDialog;
     private SelectAlbumBottomSheet bottomSheetDialogFragment;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean hidden = false, pickMode = false, editMode = false, albumsMode = true, firstLaunch = true,localFolder=true,hidenav=false;
@@ -123,10 +136,12 @@ public class LFMainActivity extends SharedMediaActivity {
     final String REVIEW_ACTION = "com.android.camera.action.REVIEW";
     public static ArrayList<Media> listAll;
     public int size;
+    private ArrayList<String> path;
     public int pos;
     private ArrayList<Media> media;
     private ArrayList<Media> selectedMedias = new ArrayList<>();
     public boolean visible;
+
 
     CoordinatorLayout coordinatorLayoutMainContent;
 
@@ -371,6 +386,7 @@ public class LFMainActivity extends SharedMediaActivity {
         Log.e("TAG", "lfmain");
 
         coordinatorLayoutMainContent = (CoordinatorLayout) findViewById(R.id.cl_main_content);
+        progressDialog = new ProgressDialog(this);
         BottomNavigationView navigationView = (BottomNavigationView)findViewById(R.id.bottombar);
 
         SP = PreferenceUtil.getInstance(getApplicationContext());
@@ -1051,6 +1067,7 @@ public class LFMainActivity extends SharedMediaActivity {
         menu.findItem(R.id.action_copy).setVisible(visible);
         menu.findItem(R.id.action_move).setVisible(visible || editMode);
         menu.findItem(R.id.excludeAlbumButton).setVisible(editMode && !all_photos && albumsMode);
+        menu.findItem(R.id.zipAlbumButton).setVisible(editMode && !all_photos&&albumsMode);
         menu.findItem(R.id.select_all).setVisible(editMode);
         menu.findItem(R.id.delete_action).setVisible((!albumsMode || editMode) && (!all_photos || editMode));
         menu.findItem(R.id.hideAlbumButton).setVisible(!all_photos && getAlbums().getSelectedCount() > 0);
@@ -1071,6 +1088,7 @@ public class LFMainActivity extends SharedMediaActivity {
     }
 
     //endregion
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -1351,6 +1369,20 @@ public class LFMainActivity extends SharedMediaActivity {
                 });
                 excludeDialogBuilder.setNegativeButton(this.getString(R.string.cancel).toUpperCase(), null);
                 excludeDialogBuilder.show();
+                return true;
+
+            case R.id.zipAlbumButton:
+
+                path = new ArrayList<>();
+                File folder = new File(getAlbums().getSelectedAlbum(0).getPath() + "/");
+                File[] fpath = folder.listFiles();
+                for(int i = 0; i < fpath.length; i++){
+                    if(fpath[i].getPath().endsWith(".jpg") ){
+                        path.add(fpath[i].getPath());
+                    }
+
+                }
+                new ZipAlbumTask().execute();
                 return true;
 
             case R.id.sharePhotos:
@@ -1746,6 +1778,7 @@ public class LFMainActivity extends SharedMediaActivity {
         }
     }
 
+
     private Bitmap getBitmap(String path) {
 
         Uri uri = Uri.fromFile(new File(path));
@@ -1867,6 +1900,73 @@ public class LFMainActivity extends SharedMediaActivity {
         }
     }
 
+    private class ZipAlbumTask extends AsyncTask<Void, Integer, Void>{
+
+        @Override protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.setTitle(R.string.zip_action);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.cancel), new
+                    DialogInterface
+                    .OnClickListener
+                    () {
+                @Override public void onClick(DialogInterface dialogInterface, int i) {
+                    cancel(true);
+                    progressDialog.dismiss();
+                }
+            });
+            progressDialog.show();
+        }
+
+        @Override protected Void doInBackground(Void... voids) {
+            try {
+                BufferedInputStream origin = null;
+                FileOutputStream dest = new FileOutputStream(getAlbums().getSelectedAlbum(0).getParentsFolders().get
+                        (1) + "/" + getAlbums().getSelectedAlbum(0).getName() +
+                        ".zip");
+                ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
+                        dest));
+                byte data[] = new byte[BUFFER];
+
+                for (int i = 0; i < path.size(); i++) {
+                    FileInputStream fi = new FileInputStream(path.get(i));
+                    origin = new BufferedInputStream(fi, BUFFER);
+
+                    ZipEntry entry = new ZipEntry(path.get(i).substring(path.get(i).lastIndexOf("/") + 1));
+                    out.putNextEntry(entry);
+                    int count;
+
+                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
+
+                        out.write(data, 0, count);
+                    }
+                    origin.close();
+                }
+
+                out.close();
+                if(isCancelled()){
+                    return null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override protected void onCancelled() {
+            super.onCancelled();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.cancel_zip), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+           progressDialog.dismiss();
+            String path = getAlbums().getSelectedAlbum(0).getParentsFolders().get(1) + getAlbums().getSelectedAlbum
+                    (0).getName() + ".zip";
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.zip_location) + path, Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
 
     private class PrepareAlbumTask extends AsyncTask<Void, Integer, Void> {
 

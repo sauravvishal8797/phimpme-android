@@ -423,11 +423,15 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="hide">Hide</string>
+    <string name="zip">Zip</string>
     <string name="unhide">Unhide</string>
     <string name="ok_action">OK</string>
     <string name="update_action">UPDATE</string>
     <string name="description_hint">Write something!</string>
     <string name="save_action">Save</string>
+    <string name="zip_action">Zipping the folder.....</string>
+    <string name="cancel_zip">Zip operation canceled..</string>
+    <string name="zip_location">Zip saved to location: </string>
     <string name="rename_photo_action">Rename photo</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

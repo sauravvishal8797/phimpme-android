@@ -74,6 +74,15 @@
 
         </LinearLayout>
 
+        <ProgressBar android:layout_width="match_parent"
+                     android:id="@+id/prohressbar"
+                     android:minHeight="20dp"
+                     android:maxHeight="20dp"
+                     android:layout_centerInParent="true"
+                     android:visibility="gone"
+                     style="@android:style/Widget.ProgressBar.Horizontal"
+                     android:layout_height="30dp"/>
+
         <include
             android:id="@+id/bottombar"
             layout="@layout/element_bottom_navigation"
