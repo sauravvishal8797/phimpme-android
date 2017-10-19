@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -121,6 +122,7 @@ import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.DROPBO
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.FLICKR;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.OTHERS;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.TWITTER;
+import static org.fossasia.phimpme.utilities.ActivitySwitchHelper.getContext;
 import static org.fossasia.phimpme.utilities.Constants.BOX_CLIENT_ID;
 import static org.fossasia.phimpme.utilities.Constants.BOX_CLIENT_SECRET;
 import static org.fossasia.phimpme.utilities.Constants.FAIL;
@@ -650,6 +652,7 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
         captionEditText.setHint(R.string.description_hint);
         captionEditText.setHintTextColor(getResources().getColor(R.color.grey, null));
         captionEditText.setSelectAllOnFocus(true);
+        captionEditText.setHighlightColor(ContextCompat.getColor(getContext(), R.color.cardview_shadow_start_color));
         captionEditText.selectAll();
         captionEditText.setSingleLine(false);
         if(caption!=null) {

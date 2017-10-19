@@ -92,6 +92,7 @@ import static org.fossasia.phimpme.gallery.data.base.SortingMode.DATE;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.NAME;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.NUMERIC;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.SIZE;
+import static org.fossasia.phimpme.utilities.ActivitySwitchHelper.getContext;
 
 
 public class LFMainActivity extends SharedMediaActivity {
@@ -1673,6 +1674,10 @@ public class LFMainActivity extends SharedMediaActivity {
                 AlertDialog.Builder renameDialogBuilder = new AlertDialog.Builder(LFMainActivity.this, getDialogStyle());
                 final EditText editTextNewName = new EditText(getApplicationContext());
                 editTextNewName.setText(albumsMode ? getAlbums().getSelectedAlbum(0).getName() : getAlbum().getName());
+                editTextNewName.setSelectAllOnFocus(true);
+                editTextNewName.setHighlightColor(ContextCompat.getColor(getContext(), R.color.cardview_shadow_start_color));
+                editTextNewName.selectAll();
+                editTextNewName.setSingleLine(false);
 
                 AlertDialogsHelper.getInsertTextDialog(LFMainActivity.this, renameDialogBuilder,
                         editTextNewName, R.string.rename_album, null);

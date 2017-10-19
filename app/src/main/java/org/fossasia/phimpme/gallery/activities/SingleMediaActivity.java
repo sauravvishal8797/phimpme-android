@@ -80,6 +80,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
+import static org.fossasia.phimpme.utilities.ActivitySwitchHelper.getContext;
 import static org.fossasia.phimpme.utilities.Utils.promptSpeechInput;
 
 /**
@@ -210,7 +211,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
         });
         setRecentApp(getString(R.string.app_name));
         setupSystemUI();
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ActivitySwitchHelper.getContext(),
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false);
         mViewPager.setLayoutManager(linearLayoutManager);
         mViewPager.setHasFixedSize(true);
@@ -630,6 +631,10 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
             case R.id.action_description:
                 AlertDialog.Builder descriptionDialogBuilder = new AlertDialog.Builder(SingleMediaActivity.this, getDialogStyle());
                 editTextDescription = getDescriptionDialog(SingleMediaActivity.this, descriptionDialogBuilder);
+                editTextDescription.setSelectAllOnFocus(true);
+                editTextDescription.setHighlightColor(ContextCompat.getColor(getContext(), R.color.cardview_shadow_start_color));
+                editTextDescription.selectAll();
+                editTextDescription.setSingleLine(false);
                 descriptionDialogBuilder.setNegativeButton(getString(R.string.cancel).toUpperCase(), null);
                 descriptionDialogBuilder.setPositiveButton((temp != null && temp.getTitle().length() != 0) ? getString(R.string.update_action) : getString(R.string.ok_action).toUpperCase(), new DialogInterface.OnClickListener() {
                     @Override
