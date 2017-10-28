@@ -16,10 +16,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -82,80 +86,108 @@ public class SelectAlbumBottomSheet extends BottomSheetDialogFragment {
 
   @Override
   public void setupDialog(Dialog dialog, int style) {
-	super.setupDialog(dialog, style);
+	  super.setupDialog(dialog, style);
 
-	View contentView = View.inflate(getContext(), R.layout.select_folder_bottom_sheet, null);
-	theme = new ThemeHelper(getContext());
+	  View contentView = View.inflate(getContext(), R.layout.select_folder_bottom_sheet, null);
+	  theme = new ThemeHelper(getContext());
 
-	RecyclerView mRecyclerView = (RecyclerView) contentView.findViewById(R.id.folders);
-	mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
-	adapter = new BottomSheetAlbumsAdapter();
-	mRecyclerView.setAdapter(adapter);
+	  RecyclerView mRecyclerView = (RecyclerView) contentView.findViewById(R.id.folders);
+	  mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+	  adapter = new BottomSheetAlbumsAdapter();
+	  mRecyclerView.setAdapter(adapter);
 
-	exploreModePanel = (LinearLayout) contentView.findViewById(R.id.explore_mode_panel);
-	currentFolderPath = (TextView) contentView.findViewById(R.id.bottom_sheet_sub_title);
-	imgExploreMode = (IconicsImageView) contentView.findViewById(R.id.toggle_hidden_icon);
-	imgExploreMode.setOnClickListener(new View.OnClickListener() {
-	  @Override
-	  public void onClick(View v) {
-		toggleExplorerMode(!exploreMode);
-	  }
-	});
-
-	toggleExplorerMode(false);
-
-	/**SET UP THEME**/
-	theme.setColorScrollBarDrawable(ContextCompat.getDrawable(dialog.getContext(), R.drawable.ic_scrollbar));
-	contentView.findViewById(R.id.ll_bottom_sheet_title).setBackgroundColor(theme.getPrimaryColor());
-	contentView.findViewById(R.id.ll_select_folder).setBackgroundColor(theme.getCardBackgroundColor());
-	((TextView) contentView.findViewById(R.id.bottom_sheet_title)).setText(title);
-
-	((IconicsImageView) contentView.findViewById(R.id.create_new_folder)).setColor(theme.getIconColor());
-	((TextView) contentView.findViewById(R.id.create_new_folder_text)).setTextColor(theme.getSubTextColor());
-	((IconicsImageView) contentView.findViewById(R.id.done)).setColor(theme.getIconColor());
-
-	contentView.findViewById(R.id.done).setOnClickListener(new View.OnClickListener() {
-	  @Override
-	  public void onClick(View view) {
-		selectAlbumInterface.folderSelected(currentFolderPath.getText().toString());
-	  }
-	});
-
-	contentView.findViewById(R.id.ll_create_new_folder).setOnClickListener(new View.OnClickListener() {
-	  @Override
-	  public void onClick(View view) {
-          final EditText editText = new EditText(getContext());
-          InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-          inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-          AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), theme.getDialogStyle());
-          AlertDialogsHelper.getInsertTextDialog(((ThemedActivity) getActivity()), builder,
-                  editText, R.string.new_folder, null);
-		builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
+	  exploreModePanel = (LinearLayout) contentView.findViewById(R.id.explore_mode_panel);
+	  currentFolderPath = (TextView) contentView.findViewById(R.id.bottom_sheet_sub_title);
+	  imgExploreMode = (IconicsImageView) contentView.findViewById(R.id.toggle_hidden_icon);
+	  imgExploreMode.setOnClickListener(new View.OnClickListener() {
 		  @Override
-		  public void onClick(DialogInterface dialogInterface, int i) {
-              int folderCount=folders.size();
-              int check=1;
-              int filePosition=0;
-              while (filePosition<folderCount) {
-                  File f = folders.get(filePosition);
-                  filePosition++;
-                  if (editText.getText().toString().equals(f.getName()))
-                      check=0;
-              }
-              if(!editText.getText().toString().trim().isEmpty() && check!=0) {
-			File folderPath = new File(currentFolderPath.getText().toString() + File.separator + editText.getText().toString());
-			if (folderPath.mkdir()) displayContentFolder(folderPath);
-              }
-              else if(check==0)
-                  Toast.makeText(getContext(),R.string.folder_name_exists,Toast.LENGTH_SHORT).show();
-
-              else
-                  Toast.makeText(getContext(),R.string.empty_folder_name,Toast.LENGTH_SHORT).show();
+		  public void onClick(View v) {
+			  toggleExplorerMode(!exploreMode);
 		  }
-		});
-		builder.show();
-	  }
-	});
+	  });
+
+	  toggleExplorerMode(false);
+
+	  /**SET UP THEME**/
+	  theme.setColorScrollBarDrawable(ContextCompat.getDrawable(dialog.getContext(), R.drawable.ic_scrollbar));
+	  contentView.findViewById(R.id.ll_bottom_sheet_title).setBackgroundColor(theme.getPrimaryColor());
+	  contentView.findViewById(R.id.ll_select_folder).setBackgroundColor(theme.getCardBackgroundColor());
+	  ((TextView) contentView.findViewById(R.id.bottom_sheet_title)).setText(title);
+
+	  ((IconicsImageView) contentView.findViewById(R.id.create_new_folder)).setColor(theme.getIconColor());
+	  ((TextView) contentView.findViewById(R.id.create_new_folder_text)).setTextColor(theme.getSubTextColor());
+	  ((IconicsImageView) contentView.findViewById(R.id.done)).setColor(theme.getIconColor());
+
+	  contentView.findViewById(R.id.done).setOnClickListener(new View.OnClickListener() {
+		  @Override
+		  public void onClick(View view) {
+			  selectAlbumInterface.folderSelected(currentFolderPath.getText().toString());
+		  }
+	  });
+
+	  contentView.findViewById(R.id.ll_create_new_folder).setOnClickListener(new View.OnClickListener() {
+		  @Override
+		  public void onClick(View view) {
+			  final EditText editText = new EditText(getContext());
+			  editText.setHint(getResources().getString(R.string.description_hint));
+			  AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), theme.getDialogStyle());
+			  AlertDialogsHelper.getInsertTextDialog(((ThemedActivity) getActivity()), builder,
+					  editText, R.string.new_folder, null);
+			  builder.setNegativeButton(getString(R.string.cancel).toUpperCase(), null);
+			  builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
+				  @Override
+				  public void onClick(DialogInterface dialogInterface, int i) {
+					  int folderCount = folders.size();
+					  int check = 1;
+					  int filePosition = 0;
+					  while (filePosition < folderCount) {
+						  File f = folders.get(filePosition);
+						  filePosition++;
+						  if (editText.getText().toString().equals(f.getName()))
+							  check = 0;
+					  }
+					  if (!editText.getText().toString().trim().isEmpty() && check != 0) {
+						  File folderPath = new File(currentFolderPath.getText().toString() + File.separator +
+								  editText.getText().toString());
+						  if (folderPath.mkdir()) displayContentFolder(folderPath);
+					  } else if (check == 0)
+						  Toast.makeText(getContext(), R.string.folder_name_exists, Toast.LENGTH_SHORT).show();
+
+					  else
+						  Toast.makeText(getContext(), R.string.empty_folder_name, Toast.LENGTH_SHORT).show();
+				  }
+			  });
+			  final AlertDialog dialog1 = builder.create();
+			  dialog1.show();
+			  dialog1.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager
+					  .LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+			  dialog1.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+			  dialog1.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+			  editText.addTextChangedListener(new TextWatcher() {
+				  @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+				  }
+
+				  @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+				  }
+
+				  @Override public void afterTextChanged(Editable editable) {
+					  if (TextUtils.isEmpty(editable)) {
+						  // Disable ok button
+						  dialog1.getButton(
+								  AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+					  } else {
+						  // Something into edit text. Enable the button.
+						  dialog1.getButton(
+								  AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+					  }
+
+				  }
+			  });
+
+		  }
+	  });
 
 
 	dialog.setContentView(contentView);

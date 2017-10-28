@@ -38,7 +38,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -99,6 +102,8 @@ import static org.fossasia.phimpme.gallery.data.base.SortingMode.DATE;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.NAME;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.NUMERIC;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.SIZE;
+
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
 
 
 public class LFMainActivity extends SharedMediaActivity {
@@ -726,7 +731,7 @@ public class LFMainActivity extends SharedMediaActivity {
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
-        AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
+        AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
     }
 
 
@@ -854,7 +859,7 @@ public class LFMainActivity extends SharedMediaActivity {
                     final AlertDialog passwordDialog = passwordDialogBuilder.create();
                     passwordDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                     passwordDialog.show();
-                    AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), passwordDialog);
+                    AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, BUTTON_NEGATIVE}, getAccentColor(), passwordDialog);
                     passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View
                             .OnClickListener() {
                         @Override
@@ -1228,7 +1233,7 @@ public class LFMainActivity extends SharedMediaActivity {
                 hideDialogBuilder.setNegativeButton(this.getString(R.string.cancel).toUpperCase(), null);
                 AlertDialog alertDialog = hideDialogBuilder.create();
                 alertDialog.show();
-                AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL}, getAccentColor(), alertDialog);
+                AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL}, getAccentColor(), alertDialog);
                 return true;
 
             case R.id.delete_action:
@@ -1341,7 +1346,7 @@ public class LFMainActivity extends SharedMediaActivity {
                             final AlertDialog passwordDialog = passwordDialogBuilder.create();
                             passwordDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                             passwordDialog.show();
-                            AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), passwordDialog);
+                            AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, BUTTON_NEGATIVE}, getAccentColor(), passwordDialog);
                             passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -1363,7 +1368,7 @@ public class LFMainActivity extends SharedMediaActivity {
                 });
                 AlertDialog alertDialogDelete = deleteDialog.create();
                 alertDialogDelete.show();
-                AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialogDelete);
+                AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, BUTTON_NEGATIVE}, getAccentColor(), alertDialogDelete);
 
                 return true;
             case R.id.excludeAlbumButton:
@@ -1408,7 +1413,7 @@ public class LFMainActivity extends SharedMediaActivity {
                 excludeDialogBuilder.setNegativeButton(this.getString(R.string.cancel).toUpperCase(), null);
                 AlertDialog alertDialogExclude = excludeDialogBuilder.create();
                 alertDialogExclude.show();
-                AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialogExclude);
+                AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, BUTTON_NEGATIVE}, getAccentColor(), alertDialogExclude);
                 return true;
 
             case R.id.sharePhotos:
@@ -1769,7 +1774,32 @@ public class LFMainActivity extends SharedMediaActivity {
                 renameDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_IS_FORWARD_NAVIGATION);
                 editTextNewName.setSelection(editTextNewName.getText().toString().length());
                 renameDialog.show();
-                AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), renameDialog);
+                renameDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                editTextNewName.addTextChangedListener(new TextWatcher() {
+                    @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override public void afterTextChanged(Editable editable) {
+                        if (TextUtils.isEmpty(editable)) {
+                            // Disable ok button
+                            renameDialog.getButton(
+                                    AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                        } else {
+                            // Something into edit text. Enable the button.
+                            renameDialog.getButton(
+                                    AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                        }
+
+                    }
+                });
+
+                //AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface
+                  //  .BUTTON_NEGATIVE}, getAccentColor(), renameDialog);
                 renameDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View dialog) {
