@@ -129,7 +129,8 @@ public class SelectAlbumBottomSheet extends BottomSheetDialogFragment {
 		  @Override
 		  public void onClick(View view) {
 			  final EditText editText = new EditText(getContext());
-			  editText.setHint(getResources().getString(R.string.description_hint));
+			  editText.setHint(R.string.description_hint);
+              editText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.grey));
 			  AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), theme.getDialogStyle());
 			  AlertDialogsHelper.getInsertTextDialog(((ThemedActivity) getActivity()), builder,
 					  editText, R.string.new_folder, null);

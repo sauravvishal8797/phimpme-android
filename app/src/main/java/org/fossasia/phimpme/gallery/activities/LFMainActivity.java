@@ -1753,6 +1753,8 @@ public class LFMainActivity extends SharedMediaActivity {
                 final EditText editTextNewName = new EditText(getApplicationContext());
                 editTextNewName.setText(albumsMode ? getAlbums().getSelectedAlbum(0).getName() : getAlbum().getName());
                 editTextNewName.setSelectAllOnFocus(true);
+                editTextNewName.setHint(R.string.description_hint);
+                editTextNewName.setHintTextColor(ContextCompat.getColor(getApplicationContext(), R.color.grey));
                 editTextNewName.setHighlightColor(ContextCompat.getColor(getApplicationContext(), R.color.cardview_shadow_start_color));
                 editTextNewName.selectAll();
                 editTextNewName.setSingleLine(false);
