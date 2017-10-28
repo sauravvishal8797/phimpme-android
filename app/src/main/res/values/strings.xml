@@ -717,6 +717,12 @@
 
     <!--ALBUM DETAILS-->
     <string name="total_photos">Total photos</string>
+    <string name="hidden">Hidden</string>
+    <string name="writable">Writable</string>
+    <string name="readable">Readable</string>
+    <string name="size_folder">Size</string>
+    <string name="modified">Last Modified</string>
+    <string name="parent_path">Parent</string>
 
     <!--DRAWER ITEMS -->
     <string name="local_folder">Local Folders</string>
