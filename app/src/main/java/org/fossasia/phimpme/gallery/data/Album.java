@@ -286,7 +286,7 @@ public class Album implements Serializable {
 		return file.getParent();
 	}
 
-	public double size(){
+	public String size(){
 		File file = new File(getPath());
 		long size = 0;
 		size = getFileFolderSize(file);
@@ -296,7 +296,7 @@ public class Album implements Serializable {
 			sizeMB = (double) size / 1024;
 			s = " KB";
 		}
-		return sizeMB;
+		return String.valueOf(sizeMB) + s;
 	}
 
 	public static long getFileFolderSize(File dir) {
@@ -471,12 +471,12 @@ public class Album implements Serializable {
         details.put(context.getString(R.string.total_photos),Integer.toString(getCount()));
 		details.put(context.getString(R.string.parent_path), getParentPath());
 		details.put(context.getString(R.string.modified), lastmodified());
-		details.put(context.getString(R.string.size_folder), String.valueOf(size()));
+		details.put(context.getString(R.string.size_folder), size());
 		if(isHidden()){
-			details.put(context.getString(R.string.hidden_folder), "Yes");
+			details.put(context.getString(R.string.hidden), "Yes");
 		}
 		else{
-			details.put(context.getString(R.string.hidden_folder), "No");
+			details.put(context.getString(R.string.hidden), "No");
 		}
 		if(isReadable()){
 			details.put(context.getString(R.string.readable), "Yes");
@@ -490,6 +490,7 @@ public class Album implements Serializable {
 		else{
 			details.put(context.getString(R.string.writable), "No");
 		}
+
         return details;
     }
 
