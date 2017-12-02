@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import org.fossasia.phimpme.gallery.data.CustomAlbumsHelper;
 import org.fossasia.phimpme.gallery.data.Album;
@@ -142,7 +143,9 @@ public class StorageProvider {
         }
         for (String path : listOfAllImages) {
             list.add(new Media(new File(path)));
+
         }
+        Log.i("trtrtrt", list.get(0).getDateModified().toString()+list.get(0).getUri().toString());
         return list;
     }
 
