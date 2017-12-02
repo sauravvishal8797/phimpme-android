@@ -721,6 +721,7 @@
     <!--DRAWER ITEMS -->
     <string name="local_folder">Local Folders</string>
     <string name="hidden_folder">Hidden Folders</string>
+    <string name="favourite_folder">Favourites</string>
     <string name="tags">Tags</string>
     <string name="timeline">Timeline</string>
     <string name="wallpapers">Wallpapers</string>
