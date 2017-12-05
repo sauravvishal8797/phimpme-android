@@ -68,6 +68,7 @@ import com.mikepenz.iconics.view.IconicsImageView;
 
 import org.fossasia.phimpme.R;
 import org.fossasia.phimpme.base.SharedMediaActivity;
+import org.fossasia.phimpme.data.local.FavouriteImagesModel;
 import org.fossasia.phimpme.data.local.UploadHistoryRealmModel;
 import org.fossasia.phimpme.gallery.SelectAlbumBottomSheet;
 import org.fossasia.phimpme.gallery.adapters.AlbumsAdapter;
@@ -110,6 +111,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
+
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.DATE;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.NAME;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.NUMERIC;
@@ -121,7 +124,7 @@ public class LFMainActivity extends SharedMediaActivity {
     private static String TAG = "AlbumsAct";
     private int REQUEST_CODE_SD_CARD_PERMISSIONS = 42;
     private static final int BUFFER = 80000;
-    private boolean about=false,settings=false,uploadHistory=false;
+    private boolean about=false,settings=false,uploadHistory=false, favourites=false;
     private CustomAlbumsHelper customAlbumsHelper = CustomAlbumsHelper.getInstance(LFMainActivity.this);
     private PreferenceUtil SP;
     private SecurityHelper securityObj;
@@ -151,6 +154,9 @@ public class LFMainActivity extends SharedMediaActivity {
     private ArrayList<Media> media;
     private ArrayList<Media> selectedMedias = new ArrayList<>();
     public boolean visible;
+
+    private Realm realm;
+    private RealmQuery<FavouriteImagesModel> favouriteImagesModelRealmQuery;
 
     private FloatingActionButton fabScrollUp;
 
@@ -491,6 +497,12 @@ public class LFMainActivity extends SharedMediaActivity {
         invalidateOptionsMenu();
     }
 
+    private void displayfavourites(){
+        realm = Realm.getDefaultInstance();
+        favouriteImagesModelRealmQuery = realm.
+
+    }
+
     private void displayAlbums() {
         all_photos = false;
         displayAlbums(true);
@@ -654,6 +666,9 @@ public class LFMainActivity extends SharedMediaActivity {
                     intent = new Intent(LFMainActivity.this, UploadHistory.class);
                     startActivity(intent);
                     uploadHistory=false;
+                } else if(favourites){
+                    displayfavourites();
+                    favourites=false;
                 }
 
             }
@@ -831,6 +846,7 @@ public class LFMainActivity extends SharedMediaActivity {
         ((TextView) findViewById(R.id.Drawer_share_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_rate_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_Upload_Item)).setTextColor(color);
+        ((TextView) findViewById(R.id.Drawer_favourite_Item)).setTextColor(color);
 
         /** ICONS **/
         color = getIconColor();
@@ -861,6 +877,15 @@ public class LFMainActivity extends SharedMediaActivity {
             @Override
             public void onClick(View v) {
                 about=true;
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+
+            }
+        });
+
+        findViewById(R.id.ll_drawer_favourites).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                favourites=true;
                 mDrawerLayout.closeDrawer(GravityCompat.START);
 
             }
