@@ -131,6 +131,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
     public static final String EXTRA_OUTPUT = "extra_output";
     public static String pathForDescription;
     public Boolean allPhotoMode;
+    public Boolean favphotomode;
     public int all_photo_pos;
     public int size_all;
     public int current_image_pos;
@@ -142,6 +143,8 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
     private Runnable runnable;
     boolean slideshow=false;
     private boolean details=false;
+    private RealmQuery<FavouriteImagesModel> favouriteImagesModelRealmQuery;
+    private ArrayList<Media> favouriteslist;
 
     ImageDescModel temp;
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -209,12 +212,15 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
         overridePendingTransition(R.anim.media_zoom_in,0);
         SP = PreferenceUtil.getInstance(getApplicationContext());
         securityObj = new SecurityHelper(SingleMediaActivity.this);
+        favphotomode = getIntent().getBooleanExtra("fav_photos", false);
         allPhotoMode = getIntent().getBooleanExtra(getString(R.string.all_photo_mode), false);
         all_photo_pos = getIntent().getIntExtra(getString(R.string.position), 0);
         size_all = getIntent().getIntExtra(getString(R.string.allMediaSize), getAlbum().getCount());
+        Log.i("kjkjkjkj", String.valueOf(size_all));
 
         String path2 = getIntent().getStringExtra("path");
         pathForDescription = path2;
+        //Log.i("llklklkl", pathForDescription);
 
 //            mViewPager.setLocked(savedInstanceState.getBoolean(ISLOCKED_ARG, false));
         try {
@@ -222,6 +228,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
             if ((getIntent().getAction().equals(Intent.ACTION_VIEW) || getIntent().getAction().equals(ACTION_REVIEW)) && getIntent().getData() != null) {
 
                 String path = ContentHelper.getMediaPath(getApplicationContext(), getIntent().getData());
+                Log.i("jhjhjhj111", path);
                 pathForDescription = path;
                 File file = null;
                 if (path != null)
@@ -299,7 +306,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
             }
         };
 
-        if (!allPhotoMode) {
+        if (!allPhotoMode && !favphotomode) {
             adapter = new ImageAdapter(getAlbum().getMedia(), basicCallBack, this, this);
 
             getSupportActionBar().setTitle((getAlbum().getCurrentMediaIndex() + 1) + " " + getString(R.string.of) + " " + getAlbum().getMedia().size());
@@ -318,7 +325,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
             mViewPager.scrollToPosition(getAlbum().getCurrentMediaIndex());
 
 
-        } else {
+        } else if(allPhotoMode && !favphotomode){
 
             adapter = new ImageAdapter(LFMainActivity.listAll, basicCallBack, this, this);
             getSupportActionBar().setTitle(all_photo_pos + 1 + " " + getString(R.string.of) + " " + size_all);
@@ -335,6 +342,26 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                 }
             });
             mViewPager.scrollToPosition(all_photo_pos);
+        } else if(!allPhotoMode && favphotomode){
+            Log.i("vvvvvvvv", "jlldadada");
+
+            getfavouriteimages();
+            Log.i("kkkkkk", String.valueOf(favouriteslist.size()) );
+            adapter = new ImageAdapter(favouriteslist, basicCallBack, this, this);
+            getSupportActionBar().setTitle(all_photo_pos + 1 + " " + getString(R.string.of) + " " + size_all);
+            current_image_pos = all_photo_pos;
+            mViewPager.setOnPageChangeListener(new PagerRecyclerView.OnPageChangeListener() {
+                @Override
+                public void onPageChanged(int oldPosition, int position) {
+                    current_image_pos = position;
+                    getAlbum().setCurrentPhotoIndex(position);
+                    toolbar.setTitle((position + 1) + " " + getString(R.string.of) + " " + size_all);
+                    invalidateOptionsMenu();
+                    pathForDescription = favouriteslist.get(position).getUri().getPath();
+                }
+            });
+            mViewPager.scrollToPosition(all_photo_pos);
+
         }
         Display aa = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
         mViewPager.setAdapter(adapter);
@@ -398,6 +425,20 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
 
     private void stopHandler(){
         handler.removeCallbacks(runnable);
+    }
+
+    private void getfavouriteimages(){
+        realm = Realm.getDefaultInstance();
+        favouriteslist = new ArrayList<>();
+        favouriteImagesModelRealmQuery = realm.where(FavouriteImagesModel.class);
+        int count = Integer.parseInt(String.valueOf(favouriteImagesModelRealmQuery.count()));
+        for(int i = 0; i < count; i++){
+            Uri uri = Uri.parse(favouriteImagesModelRealmQuery.findAll().get(i).getPath());
+            Log.i("llllllllllllllll", String.valueOf(uri));
+            favouriteslist.add(new Media(getApplicationContext(), uri));
+            Log.i("dmmmmmmm", String.valueOf(favouriteslist.get(i).getUri().getPath()));
+        }
+
     }
 
     @Override
