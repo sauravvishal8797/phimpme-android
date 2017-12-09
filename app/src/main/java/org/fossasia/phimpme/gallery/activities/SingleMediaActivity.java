@@ -234,9 +234,13 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                 if (path != null)
                     file = new File(path);
 
-                if (file != null && file.isFile())
+                if (file != null && file.isFile()){
                     //the image is stored in the storage
                     album = new Album(getApplicationContext(), file);
+                    Log.i("vcvcvcc", file.getPath());
+                }
+
+
                 else {
                     //try to show with Uri
                     album = new Album(getApplicationContext(), getIntent().getData());
@@ -501,9 +505,12 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
 
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
-        if (!allPhotoMode)
+        if (!allPhotoMode){
             menu.setGroupVisible(R.id.only_photos_options, true);
+        }
+       /* if(favphotomode){
 
+        }*/
         if (customUri) {
             menu.setGroupVisible(R.id.on_internal_storage, false);
             menu.setGroupVisible(R.id.only_photos_options, false);
@@ -647,6 +654,8 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+
         switch (item.getItemId()) {
 
             case android.R.id.home:

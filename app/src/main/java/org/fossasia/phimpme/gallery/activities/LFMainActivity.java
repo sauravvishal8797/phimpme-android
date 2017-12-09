@@ -160,7 +160,7 @@ public class LFMainActivity extends SharedMediaActivity {
     private Realm realm;
     private RealmQuery<FavouriteImagesModel> favouriteImagesModelRealmQuery;
     private ArrayList<Media> favouriteslist;
-    public static boolean fav_photos=false;
+    public boolean fav_photos=false;
 
     private FloatingActionButton fabScrollUp;
 
@@ -484,14 +484,9 @@ public class LFMainActivity extends SharedMediaActivity {
         ActivitySwitchHelper.setContext(this);
         securityObj.updateSecuritySetting();
         setupUI();
-        if(fav_photos && !all_photos){
-            mediaAdapter.swapDataSet(getFavouriteslist());
-            toggleRecyclersVisibility(false);
-
-        }
-        if (all_photos && !fav_photos)
+        if (all_photos)
             mediaAdapter.swapDataSet(listAll);
-        if (!all_photos && !fav_photos) {
+        if (!all_photos) {
             if (SP.getBoolean("auto_update_media", false)) {
                 if (albumsMode) {
                     if (!firstLaunch) new PrepareAlbumTask().execute();
@@ -567,7 +562,7 @@ public class LFMainActivity extends SharedMediaActivity {
                 displayAlbums();
             }
         });
-        invalidateOptionsMenu();
+       // invalidateOptionsMenu();
 
     }
 
@@ -1628,6 +1623,8 @@ public class LFMainActivity extends SharedMediaActivity {
                     new SortingUtilsPhtots().execute();
                     if (all_photos) {
                         new SortingUtilsListAll().execute();
+                    }else if(fav_photos){
+                        new SortingUtilsFavouritelist().execute();
                     }
                 }
                 item.setChecked(true);
@@ -1642,6 +1639,8 @@ public class LFMainActivity extends SharedMediaActivity {
                     new SortingUtilsPhtots().execute();
                     if (all_photos) {
                         new SortingUtilsListAll().execute();
+                    }else if(fav_photos){
+                        new SortingUtilsFavouritelist().execute();
                     }
                 }
                 item.setChecked(true);
@@ -1656,6 +1655,8 @@ public class LFMainActivity extends SharedMediaActivity {
                     new SortingUtilsPhtots().execute();
                     if (all_photos) {
                         new SortingUtilsListAll().execute();
+                    }else if(fav_photos){
+                        new SortingUtilsFavouritelist().execute();
                     }
                 }
                 item.setChecked(true);
@@ -1670,6 +1671,8 @@ public class LFMainActivity extends SharedMediaActivity {
                     new SortingUtilsPhtots().execute();
                     if (all_photos) {
                         new SortingUtilsListAll().execute();
+                    }else if(fav_photos){
+                        new SortingUtilsFavouritelist().execute();
                     }
                 }
                 item.setChecked(true);
@@ -1684,6 +1687,8 @@ public class LFMainActivity extends SharedMediaActivity {
                     new SortingUtilsPhtots().execute();
                     if (all_photos) {
                         new SortingUtilsListAll().execute();
+                    }else if(fav_photos){
+                        new SortingUtilsFavouritelist().execute();
                     }
                 }
                 item.setChecked(!item.isChecked());
@@ -2428,6 +2433,35 @@ public class LFMainActivity extends SharedMediaActivity {
             super.onPostExecute(aVoid);
             swipeRefreshLayout.setRefreshing(false);
             mediaAdapter.swapDataSet(listAll);
+        }
+    }
+
+    /*
+    Async Class for Sorting Favourites
+     */
+
+    private class SortingUtilsFavouritelist extends AsyncTask<Void, Void, ArrayList<Media>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            swipeRefreshLayout.setRefreshing(true);
+        }
+
+        @Override
+        protected ArrayList<Media> doInBackground(Void... aVoid) {
+            ArrayList<Media> favlist = getFavouriteslist();
+
+            Collections.sort(favlist, MediaComparators.getComparator(getAlbum().settings.getSortingMode(), getAlbum()
+                    .settings.getSortingOrder()));
+            return favlist;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Media> fav) {
+            super.onPostExecute(fav);
+            swipeRefreshLayout.setRefreshing(false);
+            mediaAdapter.swapDataSet(fav);
         }
     }
 
