@@ -466,7 +466,7 @@ public class Album implements Serializable {
     public MediaDetailsMap<String, String> getAlbumDetails(Context context){
         metadata = new MetadataItem(new File(getPath()));
         MediaDetailsMap<String, String> details = new MediaDetailsMap<String, String>();
-        details.put(context.getString(R.string.path), getPath());
+        details.put(context.getString(R.string.folder_path), getPath());
         details.put(context.getString(R.string.name),getName());
         details.put(context.getString(R.string.total_photos),Integer.toString(getCount()));
 		details.put(context.getString(R.string.parent_path), getParentPath());

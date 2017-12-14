@@ -1,5 +1,7 @@
 package org.fossasia.phimpme.gallery.util;
 
+import static android.R.attr.dialogLayout;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -9,8 +11,11 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.Html;
+import android.text.Layout;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -29,6 +34,7 @@ import org.fossasia.phimpme.base.ThemedActivity;
 import org.fossasia.phimpme.gallery.data.Album;
 import org.fossasia.phimpme.gallery.data.Media;
 import org.fossasia.phimpme.gallery.data.base.MediaDetailsMap;
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
@@ -150,25 +156,65 @@ public class AlertDialogsHelper {
         });
 
         detailsDialogBuilder.setView(dialogLayout);
-        loadDetails(dialogLayout,activity, mainDetails);
+        //loadDetails(dialogLayout,activity, mainDetails);
         return detailsDialogBuilder.create();
     }
 
     public static AlertDialog getAlbumDetailsDialog(final ThemedActivity activity, AlertDialog.Builder detailsDialogBuilder, final Album f) {
-        MediaDetailsMap<String, String> mainDetails = f.getAlbumDetails(activity.getApplicationContext());
-        final View dialogLayout = activity.getLayoutInflater().inflate(R.layout.dialog_album_detail, null);
-        dialogLayout.findViewById(R.id.album_details_title).setBackgroundColor(activity.getPrimaryColor());
-        ((CardView) dialogLayout.findViewById(R.id.album_details_card)).setCardBackgroundColor(activity.getCardBackgroundColor());
-
-        detailsDialogBuilder.setView(dialogLayout);
-        loadDetails(dialogLayout,activity, mainDetails);
+        MediaDetailsMap<String, String> mainDetails
+                = f.getAlbumDetails(activity.getApplicationContext());
+        //final View dialogLayout = activity.getLayoutInflater().inflate(R.layout.dialog_album_detail, null);
+        LayoutInflater li = LayoutInflater.from(activity);
+        View layout = li.inflate(R.layout.dialog_album_detail, null);
+        Log.i("kkkkkkk", mainDetails.get("Path:"));
+        layout.findViewById(R.id.album_details_title).setBackgroundColor(activity.getPrimaryColor());
+        //((CardView) layout.findViewById(R.id.album_details_card)).setCardBackgroundColor(activity
+               // .getCardBackgroundColor());
+        detailsDialogBuilder.setView(layout);
+        loadDetails(layout,activity, mainDetails);
         return detailsDialogBuilder.create();
     }
 
     private static void loadDetails(View dialogLayout, ThemedActivity activity, MediaDetailsMap<String, String> metadata) {
-        LinearLayout detailsTable = (LinearLayout) dialogLayout.findViewById(R.id.ll_list_details);
 
-        int tenPxInDp = Measure.pxToDp (10, activity);
+        LinearLayout l = (LinearLayout)dialogLayout;
+        LinearLayout detailsTable = (LinearLayout) dialogLayout.findViewById(R.id.trcia);
+        TextView t = (TextView) detailsTable.findViewById(R.id.album_details_name);
+        t.setText("doc");
+
+
+
+        TextView name = (TextView) l.findViewById(R.id.album_details_name);
+        name.setText(metadata.get(R.string.folder_name));
+        //
+        // Log.i("kjkjkjkjkjkjkjkjkjkkj", (metadata.get(R.string.folder_name)));
+        //Log.i("kjkjkjkjkjkj", name.getText().toString());
+
+        TextView type = (TextView) l.findViewById(R.id.album_details_type);
+        type.setText("Folder");
+        TextView path = (TextView) l.findViewById(R.id.album_details_path);
+        path.setText(metadata.get(R.string.folder_path));
+        TextView parent = (TextView) l.findViewById(R.id.album_details_parent);
+        parent.setText(metadata.get(R.string.parent_path));
+        //Log.i("kjkjkjkjkjkjkjkjkjkkj", (metadata.get(R.string.parent_path)));
+        TextView total = (TextView) l.findViewById(R.id.album_details_total);
+        total.setText(metadata.get(R.string.total_photos));
+        TextView size = (TextView) l.findViewById(R.id.album_details_size);
+        size.setText(metadata.get(R.string.size_folder));
+        TextView modified = (TextView) l.findViewById(R.id.album_details_last_modified);
+        modified.setText(metadata.get(R.string.modified));
+        TextView readable = (TextView) l.findViewById(R.id.album_details_readable);
+        readable.setText(metadata.get(R.string.readable));
+        TextView writable = (TextView) l.findViewById(R.id.album_details_writable);
+        writable.setText(metadata.get(R.string.writable));
+        TextView hidden = (TextView) l.findViewById(R.id.album_details_hidden);
+        hidden.setText(metadata.get(R.string.hidden));
+
+
+
+
+
+       /* int tenPxInDp = Measure.pxToDp (10, activity);
 
         for (int index : metadata.getKeySet()) {
             LinearLayout row = new LinearLayout(activity.getApplicationContext());
@@ -190,14 +236,15 @@ public class AlertDialogsHelper {
             value.setPaddingRelative(tenPxInDp, 0, 0, 0);
             row.addView(label);
             row.addView(value);
-            detailsTable.addView(row, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        }
+            detailsTable.addView(row, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT));*/
+
     }
 
     private static void showMoreDetails(View dialogLayout, ThemedActivity activity, Media media) {
 
         MediaDetailsMap<String, String> metadata = media.getAllDetails();
-        loadDetails(dialogLayout ,activity , metadata);
+        //loadDetails(dialogLayout ,activity , metadata);
     }
 
     public static void setButtonTextColor(int[] buttons, int color, AlertDialog alertDialog) {
