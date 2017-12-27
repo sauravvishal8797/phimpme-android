@@ -56,8 +56,17 @@
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:weightSum="10"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     >
+
+                    <CheckBox
+                        android:id="@+id/checkbox_text_dialog_cb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/md_black_1000"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                    />
                     <TextView
                         android:id="@+id/checkbox_text_dialog"
                         android:layout_width="wrap_content"
@@ -67,13 +76,6 @@
                         android:layout_gravity="center_vertical"
                         android:textSize="16sp"
                         android:layout_weight="9"
-                        />
-                    <CheckBox
-                        android:id="@+id/checkbox_text_dialog_cb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="1"
                         />
                 </LinearLayout>
             </LinearLayout>
