@@ -615,20 +615,46 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
 //            mViewPager.setCurrentItem(current_image_pos);
 //            toolbar.setTitle((mViewPager.getCurrentItem() + 1) + " " + getString(R.string.of) + " " + size_all);
         } else if(favphotomode && !allPhotoMode){
-            int c = current_image_pos;
-            //deleteMedia(favouriteslist.get(current_image_pos).getPath());
-            realm = Realm.getDefaultInstance();
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override public void execute(Realm realm) {
-                    RealmResults<FavouriteImagesModel> favouriteImagesModels = realm.where(FavouriteImagesModel
-                            .class).equalTo("path", favouriteslist.get(current_image_pos).getPath()).findAll();
-                    favouriteImagesModels.deleteAllFromRealm();
+            int c1 = current_image_pos;
+            if(!AlertDialogsHelper.check){
+                //deleteMedia(favouriteslist.get(current_image_pos).getPath());
+                realm = Realm.getDefaultInstance();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override public void execute(Realm realm) {
+                        RealmResults<FavouriteImagesModel> favouriteImagesModels = realm.where(FavouriteImagesModel
+                                .class).equalTo("path", favouriteslist.get(current_image_pos).getPath()).findAll();
+                        favouriteImagesModels.deleteAllFromRealm();
+                    }
+                });
+                deletefromfavouriteslist(favouriteslist.get(current_image_pos).getPath());
+                size_all = favouriteslist.size();
+                adapter.notifyDataSetChanged();
+                getSupportActionBar().setTitle((c1 + 1) + " " + getString(R.string.of) + " " + size_all);
+            }else{
+                String[] projection = {MediaStore.Images.Media._ID};
+
+                // Match on the file path
+                String selection = MediaStore.Images.Media.DATA + " = ?";
+                String[] selectionArgs = new String[]{favouriteslist.get(current_image_pos).getPath()};
+
+                // Query for the ID of the media matching the file path
+                Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                ContentResolver contentResolver = getContentResolver();
+                Cursor c =
+                        contentResolver.query(queryUri, projection, selection, selectionArgs, null);
+                if (c.moveToFirst()) {
+                    // We found the ID. Deleting the item via the content provider will also remove the file
+                    long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
+                    Uri deleteUri = ContentUris
+                            .withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                    contentResolver.delete(deleteUri, null, null);
                 }
-            });
-            deletefromfavouriteslist(favouriteslist.get(current_image_pos).getPath());
-            size_all = favouriteslist.size();
-            adapter.notifyDataSetChanged();
-            getSupportActionBar().setTitle((c + 1) + " " + getString(R.string.of) + " " + size_all);
+                c.close();
+                deletefromfavouriteslist(favouriteslist.get(current_image_pos).getPath());
+                size_all = favouriteslist.size();
+                adapter.notifyDataSetChanged();
+                getSupportActionBar().setTitle((c1 + 1) + " " + getString(R.string.of) + " " + size_all);
+            }
         }
     }
 
@@ -766,9 +792,13 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
             case R.id.action_delete:
                 handler.removeCallbacks(slideShowRunnable);
                 final AlertDialog.Builder deleteDialog = new AlertDialog.Builder(SingleMediaActivity.this, getDialogStyle());
-
-                AlertDialogsHelper.getTextDialog(SingleMediaActivity.this, deleteDialog,
-                        R.string.delete, R.string.delete_photo_message, null);
+                if(!favphotomode){
+                    AlertDialogsHelper.getTextDialog(SingleMediaActivity.this, deleteDialog,
+                            R.string.delete, R.string.delete_photo_message, null);
+                }else{
+                    AlertDialogsHelper.getTextCheckboxDialog(SingleMediaActivity.this, deleteDialog, R.string.delete, R
+                            .string.delete_single_favitem, null, getResources().getString(R.string.delete_item_from_phone));
+                }
 
                 deleteDialog.setNegativeButton(this.getString(R.string.cancel).toUpperCase(), null);
                 deleteDialog.setPositiveButton(this.getString(R.string.delete).toUpperCase(), new DialogInterface.OnClickListener() {

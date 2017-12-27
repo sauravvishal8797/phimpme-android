@@ -81,16 +81,6 @@ public class AlertDialogsHelper {
 
         TextView dialogTitle = (TextView) dialogLayout.findViewById(R.id.text_dialog_title);
         TextView dialogMessage = (TextView) dialogLayout.findViewById(R.id.text_dialog_message);
-        CheckBox checkBox = (CheckBox) dialogLayout.findViewById(R.id.checkbox_text_dialog_cb);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    check=true;
-                }else{
-                    check=false;
-                }
-            }
-        });
 
         ((CardView) dialogLayout.findViewById(R.id.message_card)).setCardBackgroundColor(activity.getCardBackgroundColor());
         dialogTitle.setBackgroundColor(activity.getPrimaryColor());
@@ -101,6 +91,36 @@ public class AlertDialogsHelper {
         textDialogBuilder.setView(dialogLayout);
         return textDialogBuilder.create();
     }
+
+    public static AlertDialog getTextCheckboxDialog(final ThemedActivity activity, AlertDialog.Builder
+            textDialogBuilder, @StringRes int title, @StringRes int Message, String msg, String checkboxmessage){
+        View dialogLayout = activity.getLayoutInflater().inflate(R.layout.dialog_text_checkbox, null);
+
+        TextView dialogTitle = (TextView) dialogLayout.findViewById(R.id.text_dialog_title);
+        TextView dialogMessage = (TextView) dialogLayout.findViewById(R.id.text_dialog_message);
+        TextView checkboxmessg = (TextView) dialogLayout.findViewById(R.id.checkbox_text_dialog);
+        CheckBox checkBox = (CheckBox) dialogLayout.findViewById(R.id.checkbox_text_dialog_cb);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    check=true;
+                }else{
+                    check=false;
+                }
+            }
+        });
+        ((CardView) dialogLayout.findViewById(R.id.message_card)).setCardBackgroundColor(activity.getCardBackgroundColor());
+        dialogTitle.setBackgroundColor(activity.getPrimaryColor());
+        dialogTitle.setText(title);
+        checkboxmessg.setText(checkboxmessage);
+        checkboxmessg.setTextColor(activity.getTextColor());
+        if (msg != null) dialogMessage.setText(msg);
+        else dialogMessage.setText(Message);
+        dialogMessage.setTextColor(activity.getTextColor());
+        textDialogBuilder.setView(dialogLayout);
+        return textDialogBuilder.create();
+    }
+
 
     public static AlertDialog getProgressDialog(final ThemedActivity activity, AlertDialog.Builder progressDialog, String title, String message){
         View dialogLayout = activity.getLayoutInflater().inflate(R.layout.dialog_progress, null);
