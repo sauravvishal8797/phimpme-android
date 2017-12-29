@@ -122,6 +122,8 @@ import static org.fossasia.phimpme.gallery.data.base.SortingMode.NAME;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.NUMERIC;
 import static org.fossasia.phimpme.gallery.data.base.SortingMode.SIZE;
 
+import static com.dropbox.client2.android.AuthActivity.result;
+
 import static android.media.CamcorderProfile.get;
 
 import butterknife.BindView;
@@ -1519,6 +1521,7 @@ public class LFMainActivity extends SharedMediaActivity {
                                         long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
                                         Uri deleteUri = ContentUris
                                                 .withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                                        Log.i("iuiuiuiui", deleteUri.getPath());
                                         contentResolver.delete(deleteUri, null, null);
                                         succ = true;
                                     } else {
@@ -1528,36 +1531,6 @@ public class LFMainActivity extends SharedMediaActivity {
                                     c.close();
                                 }
                             } else if(fav_photos && !all_photos){
-
-                                for (Media media : selectedMedias) {
-                                    String[] projection = {MediaStore.Images.Media._ID};
-
-                                    // Match on the file path
-                                    String selection = MediaStore.Images.Media.DATA + " = ?";
-                                    String[] selectionArgs = new String[]{media.getPath()};
-
-                                    // Query for the ID of the media matching the file path
-                                    Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                                    ContentResolver contentResolver = getContentResolver();
-                                    Cursor c =
-                                            contentResolver.query(queryUri, projection, selection, selectionArgs, null);
-                                    if (c.moveToFirst()) {
-                                        // We found the ID. Deleting the item via the content provider will also remove the file
-                                        long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
-                                        Uri deleteUri = ContentUris
-                                                .withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-                                        contentResolver.delete(deleteUri, null, null);
-                                        succ = true;
-                                        Log.i("oiioioi44444444444", "iiiiiiiiii");
-                                    } else {
-                                        succ = false;
-                                        Log.i("oi111111111111111i", "iiiiiiiiii");
-                                        // File not found in media store DB
-                                    }
-                                    c.close();
-                                }
-
-                                /*Log.i("oiioioi", "iiiiiiiiii");
                                 if(!AlertDialogsHelper.check){
                                     Log.i("oiio999999999", "iiiii909ii");
                                     realm = Realm.getDefaultInstance();
@@ -1575,9 +1548,34 @@ public class LFMainActivity extends SharedMediaActivity {
 
                                 }
                                 else{
-                                    Log.i("oiioi77777777777i", "iiiiiiiiii");*/
+                                    for (Media media : selectedMedias) {
+                                        String[] projection = {MediaStore.Images.Media._ID};
 
+                                        // Match on the file path
+                                        String selection = MediaStore.Images.Media.DATA + " = ?";
+                                        String[] selectionArgs = new String[]{media.getPath()};
 
+                                        // Query for the ID of the media matching the file path
+                                        Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                                        ContentResolver contentResolver = getContentResolver();
+                                        Cursor c =
+                                                contentResolver.query(queryUri, projection, selection, selectionArgs, null);
+                                        if (c.moveToFirst()) {
+                                            // We found the ID. Deleting the item via the content provider will also remove the file
+                                            long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
+                                            Uri deleteUri = ContentUris
+                                                    .withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                                            contentResolver.delete(deleteUri, null, null);
+                                            succ = true;
+                                            Log.i("oiioioi44444444444", "iiiiiiiiii");
+                                        } else {
+                                            succ = false;
+                                            Log.i("oi111111111111111i", "iiiiiiiiii");
+                                            // File not found in media store DB
+                                        }
+                                        c.close();
+                                    }
+                                }
                             }
 
                             // if not in selection mode, delete current album entirely
@@ -1623,7 +1621,6 @@ public class LFMainActivity extends SharedMediaActivity {
                         } else {
                             Log.i("nnnnnoooooooooooo", "oooooooooo");
                             requestSdCardPermissions();
-                            if(Environment.getExternalStorageState().equals(Sto))
                         }
 
                         invalidateOptionsMenu();

@@ -631,25 +631,24 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                 adapter.notifyDataSetChanged();
                 getSupportActionBar().setTitle((c1 + 1) + " " + getString(R.string.of) + " " + size_all);
             }else{
-                String[] projection = {MediaStore.Images.Media._ID};
+                boolean success = getAlbum().deleteCurrentMedia(getApplicationContext());
+                if(!success){
 
-                // Match on the file path
-                String selection = MediaStore.Images.Media.DATA + " = ?";
-                String[] selectionArgs = new String[]{favouriteslist.get(current_image_pos).getPath()};
+                    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SingleMediaActivity.this, getDialogStyle());
 
-                // Query for the ID of the media matching the file path
-                Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                ContentResolver contentResolver = getContentResolver();
-                Cursor c =
-                        contentResolver.query(queryUri, projection, selection, selectionArgs, null);
-                if (c.moveToFirst()) {
-                    // We found the ID. Deleting the item via the content provider will also remove the file
-                    long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
-                    Uri deleteUri = ContentUris
-                            .withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-                    contentResolver.delete(deleteUri, null, null);
+                    AlertDialogsHelper.getTextDialog(SingleMediaActivity.this, dialogBuilder,
+                            R.string.sd_card_write_permission_title, R.string.sd_card_permissions_message, null);
+
+                    dialogBuilder.setPositiveButton(getString(R.string.ok_action).toUpperCase(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE), REQUEST_CODE_SD_CARD_PERMISSIONS);
+                        }
+                    });
+                    dialogBuilder.show();
                 }
-                c.close();
+               // deleteMedia(favouriteslist.get(current_image_pos).getPath());
                 deletefromfavouriteslist(favouriteslist.get(current_image_pos).getPath());
                 size_all = favouriteslist.size();
                 adapter.notifyDataSetChanged();
