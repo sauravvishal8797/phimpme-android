@@ -1300,6 +1300,7 @@ public class LFMainActivity extends SharedMediaActivity {
 
     public boolean searchTitle(String newText){
         if(!fromOnClick){
+
             String queryText = newText;
             queryText = queryText.toLowerCase();
             final ArrayList<Album> newList = new ArrayList<>();
@@ -1308,6 +1309,10 @@ public class LFMainActivity extends SharedMediaActivity {
                 if (name.contains(queryText)) {
                     newList.add(album);
                 }
+            }
+            if(newList.isEmpty()){
+                TextView textView = (TextView) findViewById(R.id.nothing_to_show);
+                textView.setVisibility(View.VISIBLE);
             }
             albumsAdapter.swapDataSet(newList);
         } else {
