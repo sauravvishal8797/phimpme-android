@@ -9,11 +9,6 @@
             android:title="@string/use_as"
             app:showAsAction="never" />
 
-        <item
-            android:id="@+id/action_favourites"
-            android:title="@string/favourite"
-            app:showAsAction="never" />
-
     </group>
 
     <group android:id="@+id/on_internal_storage">
@@ -36,6 +31,11 @@
         android:id="@+id/slide_show"
         android:title="@string/slideshow"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_favourites"
+        android:title="@string/favourite"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/print"
         app:showAsAction="never"

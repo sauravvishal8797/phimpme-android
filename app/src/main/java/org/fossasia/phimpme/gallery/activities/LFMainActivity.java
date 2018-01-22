@@ -366,6 +366,7 @@ public class LFMainActivity extends SharedMediaActivity {
                         getAlbum().setCurrentPhotoIndex(m);
                         Intent intent = new Intent(LFMainActivity.this, SingleMediaActivity.class);
                         intent.putExtra("path", Uri.fromFile(new File(m.getPath())).toString());
+                        intent.putExtra("hidden", hidden);
                         ActivityOptionsCompat options = ActivityOptionsCompat.
                                 makeSceneTransitionAnimation(LFMainActivity.this, v, v.getTransitionName());
                         intent.setAction(SingleMediaActivity.ACTION_OPEN_ALBUM);
@@ -1360,7 +1361,8 @@ public class LFMainActivity extends SharedMediaActivity {
         visible = getAlbum().getSelectedCount() > 0;
         menu.findItem(R.id.action_copy).setVisible(visible);
         menu.findItem(R.id.action_move).setVisible((visible || editMode)&&!fav_photos);
-        menu.findItem(R.id.action_add_favourites).setVisible((visible || editMode)&&(!albumsMode&&!fav_photos));
+        menu.findItem(R.id.action_add_favourites).setVisible((visible || editMode)&&(!albumsMode&&!fav_photos) &&
+                (editMode && !hidden));
         menu.findItem(R.id.excludeAlbumButton).setVisible(editMode && !all_photos && albumsMode && !fav_photos);
         menu.findItem(R.id.zipAlbumButton).setVisible(editMode && !all_photos&&albumsMode &&!fav_photos && !hidden &&
                 getAlbums().getSelectedCount() == 1);

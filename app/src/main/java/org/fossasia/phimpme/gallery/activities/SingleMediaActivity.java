@@ -133,6 +133,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
     public static String pathForDescription;
     public Boolean allPhotoMode;
     public Boolean favphotomode;
+    public Boolean hidden;
     public int all_photo_pos;
     public int size_all;
     public int current_image_pos;
@@ -230,6 +231,9 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
         allPhotoMode = getIntent().getBooleanExtra(getString(R.string.all_photo_mode), false);
         all_photo_pos = getIntent().getIntExtra(getString(R.string.position), 0);
         size_all = getIntent().getIntExtra(getString(R.string.allMediaSize), getAlbum().getCount());
+        if(getIntent().hasExtra("hidden")){
+            hidden = getIntent().getBooleanExtra("hidden", false);
+        }
         if(getIntent().hasExtra("favouriteslist")){
             favouriteslist = getIntent().getParcelableArrayListExtra("favouriteslist");
         }
@@ -491,10 +495,14 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
 
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
+
+        if(hidden){
+            menu.findItem(R.id.action_favourites).setVisible(false);
+        }
         if (!allPhotoMode && !favphotomode){
             menu.setGroupVisible(R.id.only_photos_options, true);
         }
-        else if(!allPhotoMode && favphotomode){
+        else if(!allPhotoMode && favphotomode ){
             menu.findItem(R.id.action_favourites).setVisible(false);
             menu.findItem(R.id.action_cover).setVisible(false);
             menu.findItem(R.id.action_description).setVisible(false);
