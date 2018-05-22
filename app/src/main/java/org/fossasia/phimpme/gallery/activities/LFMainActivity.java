@@ -759,6 +759,12 @@ public class LFMainActivity extends SharedMediaActivity {
                 return LFMainActivity.super.onNavigationItemSelected(item);
             }
         });
+        if(getIntent().hasExtra("fav")){
+            if(getIntent().getExtras().get("fav").equals("openfav")){
+                displayfavourites();
+                favourites = false;
+            }
+        }
     }
 
     @Override

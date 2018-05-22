@@ -25,6 +25,7 @@ import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AlertDialog;
@@ -690,7 +691,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
 
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -768,7 +769,7 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
 
             case R.id.action_favourites:
                 realm = Realm.getDefaultInstance();
-                String realpath = getAlbum().getCurrentMedia().getPath();
+                final String realpath = getAlbum().getCurrentMedia().getPath();
                 RealmQuery<FavouriteImagesModel> query = realm.where(FavouriteImagesModel.class).equalTo("path",
                         realpath);
                 if(query.count() == 0){
@@ -783,10 +784,122 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                         fav.setDescription(" ");
                     }
                     realm.commitTransaction();
-                    SnackBarHandler.showWithBottomMargin(parentView, getString(R.string.add_favourite), bottomBar.getHeight());
+                    final Snackbar snackbar = SnackBarHandler.show(parentView,
+                            getResources().getString(R.string.add_favourite) );
+                    snackbar.setAction(R.string.openfav, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                           Intent intent1 = new Intent(SingleMediaActivity.this, LFMainActivity.class);
+                           intent1.putExtra("fav", "openfav");
+                           startActivity(intent1);
+                        }
+                    });
+                    snackbar.show();
                 } else {
-                    SnackBarHandler.showWithBottomMargin(parentView, getString(R.string.check_favourite), bottomBar.getHeight());
-                }
+                        String ButtonDelete = "";
+                        final AlertDialog.Builder deleteDialog = new AlertDialog.Builder(SingleMediaActivity.this, getDialogStyle());
+                        AlertDialogsHelper.getTextDialog(SingleMediaActivity.this, deleteDialog,
+                                R.string.remove_from_favourites, R.string.delete_from_favourites_message, null);
+                        ButtonDelete = this.getString(R.string.remove);
+                    deleteDialog.setNegativeButton(this.getString(R.string.cancel).toUpperCase(), null);
+                    deleteDialog.setPositiveButton(ButtonDelete.toUpperCase(), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (securityObj.isActiveSecurity() && securityObj.isPasswordOnDelete()) {
+                                final boolean passco[] = {false};
+                                final AlertDialog.Builder passwordDialogBuilder = new AlertDialog.Builder(SingleMediaActivity.this, getDialogStyle());
+                                final EditText editTextPassword = securityObj.getInsertPasswordDialog
+                                        (SingleMediaActivity.this, passwordDialogBuilder);
+                                editTextPassword.setHintTextColor(getResources().getColor(R.color.grey, null));
+                                passwordDialogBuilder.setPositiveButton(getString(R.string.ok_action).toUpperCase(), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (securityObj.checkPassword(editTextPassword.getText().toString())) {
+                                            realm.executeTransaction(new Realm.Transaction() {
+                                                @Override public void execute(Realm realm) {
+                                                    RealmResults<FavouriteImagesModel> favouriteImagesModels = realm.where(FavouriteImagesModel
+                                                            .class).equalTo("path", realpath).findAll();
+                                                    favouriteImagesModels.deleteAllFromRealm();
+                                                }
+                                            });
+                                            item.getIcon().clearColorFilter();
+                                            SnackBarHandler.showWithBottomMargin(parentView, "Removed from favourites successfully", bottomBar
+                                                    .getHeight
+                                                            ());
+                                        } else
+                                            SnackBarHandler.showWithBottomMargin(parentView, getString(R.string.wrong_password), bottomBar.getHeight());
+
+                                    }
+                                });
+                                editTextPassword.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                        //empty method body
+                                    }
+
+                                    @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                        //empty method body
+                                    }
+
+                                    @Override public void afterTextChanged(Editable editable) {
+                                        if(securityObj.getTextInputLayout().getVisibility() == View.VISIBLE && !passco[0]){
+                                            securityObj.getTextInputLayout().setVisibility(View.INVISIBLE);
+                                        }
+                                        else{
+                                            passco[0]=false;
+                                        }
+
+                                    }
+                                });
+                                passwordDialogBuilder.setNegativeButton(getString(R.string.cancel).toUpperCase(), null);
+                                final AlertDialog passwordDialog = passwordDialogBuilder.create();
+                                passwordDialog.show();
+                                passwordDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager
+                                        .LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+                                passwordDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams
+                                        .SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                                AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), passwordDialog);
+                                passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View
+                                        .OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (securityObj.checkPassword(editTextPassword.getText().toString())) {
+                                            deleteCurrentMedia();
+                                            passwordDialog.dismiss();
+                                        } else {
+                                            passco[0] = true;
+                                            securityObj.getTextInputLayout().setVisibility(View.VISIBLE);
+                                            SnackBarHandler.showWithBottomMargin(parentView, getString(R.string.wrong_password), bottomBar.getHeight());
+                                            editTextPassword.getText().clear();
+                                            editTextPassword.requestFocus();
+                                        }
+                                    }
+                                });
+                            } else
+                                realm.executeTransaction(new Realm.Transaction() {
+                                    @Override public void execute(Realm realm) {
+                                        RealmResults<FavouriteImagesModel> favouriteImagesModels = realm.where(FavouriteImagesModel
+                                                .class).equalTo("path", realpath).findAll();
+                                        favouriteImagesModels.deleteAllFromRealm();
+                                    }
+                                });
+                            item.getIcon().clearColorFilter();
+                            final Snackbar snackbar = SnackBarHandler.show(parentView,
+                                    getResources().getString(R.string.single_image_removed) );
+                            snackbar.setAction(R.string.openfav, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent1 = new Intent(SingleMediaActivity.this, LFMainActivity.class);
+                                    intent1.putExtra("fav", "openfav");
+                                    startActivity(intent1);
+                                }
+                            });
+                            snackbar.show();
+                        }
+                    });
+                    AlertDialog alertDialog = deleteDialog.create();
+                    alertDialog.show();
+                    AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
+                    return true;
+                    }
                 break;
 
             case R.id.action_delete:
