@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.fossasia.phimpme"
-    android:versionCode="6"
-    android:versionName="1.2.0">
+    android:versionCode="7"
+    android:versionName="1.4.0">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -37,25 +37,6 @@
                     android:scheme="x-demo-twitter" />
             </intent-filter>
         </activity>
-
-       <!-- <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="orientation|keyboard">
-            <intent-filter>
-<<<<<<< HEAD
-                <!-- Change this to be db- followed by your app key -->
-                <data android:scheme="db-7fhwc9meece1m9g" />
-=======
-                &lt;!&ndash; Change this to be db- followed by your app key &ndash;&gt;
-                <data android:scheme="db-APP_KEY" />
->>>>>>> 8c624a5e9b4cda5d89a84dba2d305ec6028d7699
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>-->
 
         <activity
             android:name=".opencamera.Camera.CameraActivity"
@@ -328,8 +309,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustNothing"
             android:largeHeap="true"/>
-        <meta-data android:name="com.google.android.gms.version"
-                   android:value="@integer/google_play_services_version" />
 
 
         <meta-data
@@ -347,12 +326,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-<<<<<<< HEAD
-                <data android:scheme="pdk4914573327424567067" />
-=======
                 <data android:scheme="org.fossasia.phimpme"/>
                 <data android:scheme="pdk4910600717739247160" />
->>>>>>> 8c624a5e9b4cda5d89a84dba2d305ec6028d7699
             </intent-filter>
         </activity>
         <activity
