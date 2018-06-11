@@ -91,7 +91,6 @@ public class CloudRailServices {
 
    public class DropboxLogin extends AsyncTask<Void,Void,Void>{
 
-
        @Override
        protected void onPostExecute(Void aVoid) {
            Log.e(TAG, "Dropbox Login token "+db.saveAsString());
@@ -154,6 +153,5 @@ public class CloudRailServices {
    public String getOneDriveFolderPath() { return (FOLDER);}
 
    public OneDrive getOneDrive(){ return  oneDrive;}
-
 }
 

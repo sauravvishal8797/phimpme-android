@@ -363,7 +363,6 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                     invalidateOptionsMenu();
                     if(!favsearch(getAlbum().getMedia(position).getPath())){
                         bottomMenu.findItem(R.id.action_favourites).getIcon().clearColorFilter();
-                        //bottomMenu.findItem(R.id.action_favourites).setIcon(R.drawable.ic_favourite_white_24dp);
                     }else{
                         bottomMenu.findItem(R.id.action_favourites).getIcon().setColorFilter(getAccentColor(), PorterDuff.Mode.SRC_IN);
                     }
@@ -384,7 +383,6 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                     invalidateOptionsMenu();
                     if(!favsearch(getAlbum().getMedia(position).getPath())){
                         bottomMenu.findItem(R.id.action_favourites).getIcon().clearColorFilter();
-                        //bottomMenu.findItem(R.id.action_favourites).setIcon(R.drawable.ic_favourite_white_24dp);
                     }else{
                         bottomMenu.findItem(R.id.action_favourites).getIcon().setColorFilter(getAccentColor(), PorterDuff.Mode.SRC_IN);
                     }

@@ -171,7 +171,14 @@ public class FlickrActivity extends ThemedActivity {
                 Flickr f = FlickrHelper.getInstance().getFlickr();
                 OAuthToken oauthToken = f.getOAuthInterface().getRequestToken(
                         OAUTH_CALLBACK_URI.toString());
+<<<<<<< HEAD
                 Log.i("kakakakakaka", oauthToken.getOauthToken().toString());
+=======
+<<<<<<< HEAD
+=======
+                Log.i("kakakakakaka", oauthToken.getOauthToken().toString());
+>>>>>>> 701ebe3... Dropbox, flickr authentication issues fixed
+>>>>>>> DevMastersync
                 //saveTokenSecrent(oauthToken.getOauthToken(), oauthToken.getOauthTokenSecret());
                 URL oauthUrl = f.getOAuthInterface().buildAuthenticationUrl(
                         Permission.WRITE, oauthToken);

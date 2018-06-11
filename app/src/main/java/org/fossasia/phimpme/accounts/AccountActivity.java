@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -109,6 +110,8 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
     RecyclerView accountsRecyclerView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.bottombar)
+    BottomNavigationView bottomNavigationView;
     @BindView(R.id.accounts)
     CoordinatorLayout coordinatorLayout;
     private AccountAdapter accountAdapter;
@@ -145,9 +148,10 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         callbackManager = CallbackManager.Factory.create();
         setSupportActionBar(toolbar);
         loginManager = LoginManager.getInstance();
-        toolbar.setPopupTheme(getPopupToolbarStyle());
         ThemeHelper themeHelper = new ThemeHelper(getContext());
+        toolbar.setPopupTheme(getPopupToolbarStyle());
         toolbar.setBackgroundColor(themeHelper.getPrimaryColor());
+        bottomNavigationView.setBackgroundColor(themeHelper.getPrimaryColor());
         setUpRecyclerView();
         accountPresenter.loadFromDatabase();  // Calling presenter function to load data from database
         getSupportActionBar().setTitle(R.string.title_account);
@@ -238,7 +242,6 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         if (!signInSignOut.isChecked()) {
             if (!checkNetwork(this, parentLayout)) return;
             switch (AccountDatabase.AccountName.values()[position]) {
-
                 case TWITTER:
                     signInTwitter();
                     break;
@@ -492,6 +495,7 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         startActivity(i);
     }
 
+
     @Override
     public Context getContext() {
         this.context = this;
@@ -591,5 +595,4 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
             SnackBarHandler.show(parentLayout,R.string.google_auth_fail);
         }
     }*/
-
 }
