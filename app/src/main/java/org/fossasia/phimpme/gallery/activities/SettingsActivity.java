@@ -415,11 +415,19 @@ public class SettingsActivity extends ThemedActivity {
             @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 //empty method
             }
+<<<<<<< HEAD
 
             @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 editTextPassword.setSelection(editTextPassword.getText().toString().length());
             }
 
+=======
+
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                editTextPassword.setSelection(editTextPassword.getText().toString().length());
+            }
+
+>>>>>>> upstream/master
             @Override public void afterTextChanged(Editable editable) {
                 if(securityObj.getTextInputLayout().getVisibility() == View.VISIBLE && !passco[0]){
                     securityObj.getTextInputLayout().setVisibility(View.INVISIBLE);
@@ -647,7 +655,11 @@ public class SettingsActivity extends ThemedActivity {
             public void onClick(DialogInterface dialog, int which) {
                 SP.putInt(getString(R.string.preference_primary_color), colorPicker2.getColor());
                 updateTheme();
+<<<<<<< HEAD
                 accentcolourchange(colorPicker2.getColor());
+=======
+
+>>>>>>> upstream/master
                 if(swNavBar.isChecked())
                 setNavBarColor();
 
@@ -680,6 +692,7 @@ public class SettingsActivity extends ThemedActivity {
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
         AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL}, getAccentColor(), alertDialog);
+<<<<<<< HEAD
     }
 
     private void accentcolourchange(final int color) {
@@ -697,6 +710,8 @@ public class SettingsActivity extends ThemedActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
         AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL}, getAccentColor(), alertDialog);
+=======
+>>>>>>> upstream/master
     }
 
     private void setColor(final LineColorPicker colorPicker, final LineColorPicker colorPicker2, final TextView dialogTitle) {

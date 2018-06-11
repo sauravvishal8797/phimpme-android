@@ -72,7 +72,13 @@ public class TwoItemFragment extends BaseEditFragment implements View.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
+<<<<<<< HEAD
         MyApplication.getRefWatcher(getActivity()).watch(this);
+=======
+        if(MyApplication.isLeakCanaryInstalled){
+            MyApplication.getRefWatcher(getActivity()).watch(this);
+        }
+>>>>>>> upstream/master
     }
 
     @Override

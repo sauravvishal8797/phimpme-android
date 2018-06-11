@@ -112,7 +112,13 @@ public class RecyclerMenuFragment extends BaseEditFragment {
     public void onDestroy() {
         super.onDestroy();
     //    if (filterThumbs != null)filterThumbs=null;
+<<<<<<< HEAD
         MyApplication.getRefWatcher(getActivity()).watch(this);
+=======
+        if(MyApplication.isLeakCanaryInstalled){
+            MyApplication.getRefWatcher(getActivity()).watch(this);
+        }
+>>>>>>> upstream/master
     }
 
     @Override

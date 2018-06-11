@@ -9,9 +9,14 @@ import com.cloudrail.si.exceptions.AuthenticationException;
 import com.cloudrail.si.exceptions.ParseException;
 import com.cloudrail.si.interfaces.CloudStorage;
 import com.cloudrail.si.services.Dropbox;
+<<<<<<< HEAD
 import com.cloudrail.si.services.OneDrive;
 
 import com.cloudrail.si.services.GoogleDrive;
+=======
+import com.cloudrail.si.services.GoogleDrive;
+import com.cloudrail.si.services.OneDrive;
+>>>>>>> upstream/master
 
 import org.fossasia.phimpme.utilities.BasicCallBack;
 import org.fossasia.phimpme.utilities.Constants;
@@ -34,6 +39,10 @@ public class CloudRailServices {
     DropboxLogin dropboxLogin;
     public GoogleDrive googleDrive;
     public static BasicCallBack basicCallBack;
+<<<<<<< HEAD
+=======
+    private boolean isisignedcancel = false;
+>>>>>>> upstream/master
     public Dropbox db;
     public OneDrive oneDrive;
 
@@ -77,6 +86,7 @@ public class CloudRailServices {
         return dropbox.get().saveAsString();
     }
 
+<<<<<<< HEAD
     public String getOneDriveToken(){
 
         return oneDrive.saveAsString();
@@ -86,12 +96,15 @@ public class CloudRailServices {
         return googleDrive.saveAsString();
     }
 
+=======
+>>>>>>> upstream/master
     public void login()
     {
         dropboxLogin = new DropboxLogin();
         dropboxLogin.execute();
 
     }
+<<<<<<< HEAD
 
     public void oneDriveLogin(){
         OneDriveLoginTask  driveLoginTask = new OneDriveLoginTask();
@@ -102,6 +115,8 @@ public class CloudRailServices {
             DriveLogin driveLogin = new DriveLogin();
             driveLogin.execute();
     }
+=======
+>>>>>>> upstream/master
   
     public void upload(String path, InputStream inputStream, Long size , Boolean overwrite)
     {
@@ -109,15 +124,26 @@ public class CloudRailServices {
     }
 
    public class DropboxLogin extends AsyncTask<Void,Void,Void>{
+<<<<<<< HEAD
         private boolean isauthcancelled = false;
+=======
+
+>>>>>>> upstream/master
 
        @Override
        protected void onPostExecute(Void aVoid) {
            Log.e(TAG, "Dropbox Login token "+db.saveAsString());
+<<<<<<< HEAD
 
            if(isauthcancelled){
                basicCallBack.callBack(0,db.saveAsString());
            }else{
+=======
+           if(isisignedcancel){
+               basicCallBack.callBack(0,db.saveAsString());
+           }
+           else{
+>>>>>>> upstream/master
                basicCallBack.callBack(1,db.saveAsString());
            }
        }
@@ -129,6 +155,7 @@ public class CloudRailServices {
                if(!(db.exists(FOLDER))) {
                    db.createFolder(FOLDER);
                }
+<<<<<<< HEAD
            }catch (AuthenticationException e){
                isauthcancelled = true;
            }
@@ -175,6 +202,16 @@ public class CloudRailServices {
        }
 
    }
+=======
+           }catch(AuthenticationException e){
+               isisignedcancel = true;
+
+           }
+           return null;
+
+       }
+   }
+>>>>>>> upstream/master
 
    public int loadAsString(){
        /*if the data is present for login then returns 1
@@ -189,6 +226,7 @@ public class CloudRailServices {
        }
    }
 
+<<<<<<< HEAD
    public void driveLoadAsString(String s){
        try{
            Log.e(TAG,"GOOGLE DRIVE"+s);
@@ -197,6 +235,8 @@ public class CloudRailServices {
            e.printStackTrace();
        }
    }
+=======
+>>>>>>> upstream/master
    public void loadAsString(String s){
        try {
            Log.e(TAG, "loadAsString:Dropbox Token "+s );
@@ -206,6 +246,7 @@ public class CloudRailServices {
        }
    }
 
+<<<<<<< HEAD
    public void oneDriveLoadAsString(String s){
        try{
            Log.e(TAG, "oneDriveLoadAsString: "+s );
@@ -215,14 +256,19 @@ public class CloudRailServices {
        }
    }
 
+=======
+>>>>>>> upstream/master
    public String getDropboxFolderPath(){
        return (FOLDER);
    }
 
+<<<<<<< HEAD
    public String getGoogleDriveFolderPath(){return ("/phimpme_uploads");}
 
    public boolean checkDriveFolderExist(){ return googleDrive.exists(("/phimpme_uploads"));}
 
+=======
+>>>>>>> upstream/master
    public boolean checkFolderExist(){
        return db.exists(FOLDER);
    }
@@ -232,8 +278,14 @@ public class CloudRailServices {
    public String getOneDriveFolderPath() { return (FOLDER);}
 
    public OneDrive getOneDrive(){ return  oneDrive;}
+<<<<<<< HEAD
      
    public GoogleDrive getGoogleDrive(){
        return googleDrive;
    }
 }
+=======
+
+}
+
+>>>>>>> upstream/master

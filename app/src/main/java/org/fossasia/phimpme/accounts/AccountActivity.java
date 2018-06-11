@@ -31,9 +31,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.pinterest.android.pdk.PDKCallback;
 import com.pinterest.android.pdk.PDKClient;
 import com.pinterest.android.pdk.PDKException;
@@ -80,7 +77,10 @@ import static com.pinterest.android.pdk.PDKClient.setDebugMode;
 import static org.fossasia.phimpme.R.string.no_account_signed_in;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.BOX;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.DROPBOX;
+<<<<<<< HEAD
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.GOOGLEDRIVE;
+=======
+>>>>>>> upstream/master
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.IMGUR;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.NEXTCLOUD;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.ONEDRIVE;
@@ -101,7 +101,7 @@ import static org.fossasia.phimpme.utilities.Utils.checkNetwork;
  */
 
 public class AccountActivity extends ThemedActivity implements AccountContract.View,
-        RecyclerItemClickListner.OnItemClickListener, GoogleApiClient.OnConnectionFailedListener {
+        RecyclerItemClickListner.OnItemClickListener {
 
     private static final int NEXTCLOUD_REQUEST_CODE = 3;
     private static final int OWNCLOUD_REQUEST_CODE = 9;
@@ -132,7 +132,6 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
     private Context context;
     private CloudRailServices cloudRailServices;
     private PDKClient pdkClient;
-    private GoogleApiClient mGoogleApiClient;
     private DropboxAPI<AndroidAuthSession> mDBApi;
     private BoxSession sessionBox;
 
@@ -156,8 +155,13 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         loginManager = LoginManager.getInstance();
         ThemeHelper themeHelper = new ThemeHelper(getContext());
         toolbar.setPopupTheme(getPopupToolbarStyle());
+<<<<<<< HEAD
         toolbar.setBackgroundColor(themeHelper.getPrimaryColor());
         bottomNavigationView.setBackgroundColor(themeHelper.getPrimaryColor());
+=======
+        ThemeHelper themeHelper = new ThemeHelper(getContext());
+        toolbar.setBackgroundColor(themeHelper.getPrimaryColor());
+>>>>>>> upstream/master
         setUpRecyclerView();
         accountPresenter.loadFromDatabase();  // Calling presenter function to load data from database
         getSupportActionBar().setTitle(R.string.title_account);
@@ -248,6 +252,10 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         if (!signInSignOut.isChecked()) {
             if (!checkNetwork(this, parentLayout)) return;
             switch (AccountDatabase.AccountName.values()[position]) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
                 case TWITTER:
                     signInTwitter();
                     break;
@@ -266,10 +274,13 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
                     Intent WordpressShare = new Intent(this, WordpressLoginActivity.class);
                     startActivity(WordpressShare);
                     break;*/
+<<<<<<< HEAD
                 case GOOGLEDRIVE:
                     signInGoogleDrive();
                     break;
 
+=======
+>>>>>>> upstream/master
                 case PINTEREST:
                     signInPinterest();
                     break;
@@ -390,11 +401,6 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
                 .initiateInActivity(AccountActivity.this);
     }
 
-    private void signInGooglePlus() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
     private void signInDropbox() {
         if (accountPresenter.checkAlreadyExist(DROPBOX))
             SnackBarHandler.show(coordinatorLayout, R.string.already_signed_in);
@@ -429,6 +435,7 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
             //Nothing is to be done when the BROWSABLE Intent is null
         }
         super.onNewIntent(intent);
+<<<<<<< HEAD
     }
 
     private void signInGoogleDrive() {
@@ -464,6 +471,8 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
                 }
             };
             CloudRailServices.setCallBack(basicCallBack);
+=======
+>>>>>>> upstream/master
     }
 
     private void signInImgur() {
@@ -549,6 +558,7 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         startActivity(i);
     }
 
+<<<<<<< HEAD
 
     /**
      * Create Facebook login and session
@@ -600,6 +610,8 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
                 });
     }*/
 
+=======
+>>>>>>> upstream/master
     @Override
     public Context getContext() {
         this.context = this;
@@ -658,6 +670,7 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         }catch (Exception e )
         {
             //catches exception dont need handling
+<<<<<<< HEAD
         }
         accountPresenter.loadFromDatabase();
     }
@@ -695,6 +708,10 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
             //No need for handling
         }
         accountPresenter.loadFromDatabase();
+=======
+        }
+        accountPresenter.loadFromDatabase();
+>>>>>>> upstream/master
     }
 
     @Override
@@ -735,8 +752,11 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         }
     }*/
 
+<<<<<<< HEAD
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         SnackBarHandler.show(coordinatorLayout, getApplicationContext().getString(R.string.connection_failed));
     }
+=======
+>>>>>>> upstream/master
 }

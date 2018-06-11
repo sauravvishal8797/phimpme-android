@@ -1,8 +1,12 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
 apply plugin: 'realm-android'
-apply plugin: 'com.google.firebase.firebase-perf'
+
+def keystorePropertiesFile = rootProject.file("sample_keystore.properties")
+
+def keystoreProperties = new Properties()
+
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion 25
@@ -26,9 +30,14 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+<<<<<<< HEAD
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
 
+=======
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+>>>>>>> upstream/master
         }
         debug {
             testCoverageEnabled false
@@ -82,7 +91,7 @@ repositories {
     }
     maven { url "https://jitpack.io" }
 
-    maven { url 'https://maven.fabric.io/public' }
+    //maven { url 'https://maven.fabric.io/public' }
 
     maven{ url "https://mvnrepository.com/artifact/com.box/box-android-sdk" }
 }
@@ -101,11 +110,14 @@ dependencies {
     compile "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:customtabs:$rootProject.supportLibraryVersion"
+<<<<<<< HEAD
     compile 'com.google.firebase:firebase-core:11.0.2'
     compile 'com.google.firebase:firebase-messaging:11.0.2'
     compile "com.google.android.gms:play-services-auth:$rootProject.gmsVersion"
     compile "com.google.android.gms:play-services-plus:$rootProject.gmsVersion"
     compile "com.google.firebase:firebase-perf:$rootProject.gmsVersion"
+=======
+>>>>>>> upstream/master
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     //exoplayer
@@ -118,9 +130,12 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.yalantis:ucrop:1.5.0'
     compile 'de.psdev.licensesdialog:licensesdialog:1.8.0'
+<<<<<<< HEAD
     compile('com.crashlytics.sdk.android:crashlytics:2.9.3@aar') {
         transitive = true;
     }
+=======
+>>>>>>> upstream/master
     compile 'com.daksh:loglr:1.2.1'
     compile 'com.koushikdutta.ion:ion:2.1.7'
     compile 'org.jetbrains:annotations-java5:15.0'
@@ -159,13 +174,18 @@ dependencies {
     compile "com.github.nextcloud:android-library:$rootProject.nextCloudVersion"
 
     //leak canary
+<<<<<<< HEAD
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+=======
+    debugCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+>>>>>>> upstream/master
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 
     //flickr
     compile files('libs/flickrj-android-2.1.0.jar')
 
     //tumblr
+<<<<<<< HEAD
     compile ('com.tumblr:jumblr:0.0.11'){
         exclude module:'scribe'
     }
@@ -180,6 +200,22 @@ dependencies {
     testCompile "junit:junit:$rootProject.junitVersion"
     androidTestCompile 'com.google.code.findbugs:jsr305:3.0.0'
 
+=======
+    compile('com.tumblr:jumblr:0.0.11') {
+        exclude module: 'scribe'
+    }
+
+    //realm
+    compile 'com.uphyca:stetho_realm:2.0.0'
+
+    //metadataextractor
+    compile 'com.drewnoakes:metadata-extractor:2.9.1'
+
+    //tests
+    testCompile "junit:junit:$rootProject.junitVersion"
+    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.0'
+
+>>>>>>> upstream/master
     //opencv
     compile project(':openCVLibrary24133')
 
@@ -188,9 +224,11 @@ dependencies {
 
     //photoview
     compile project(':photoview')
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/master
 }
-apply plugin: 'com.google.gms.google-services'
 
 buildscript {
     repositories {

@@ -59,7 +59,6 @@ import com.facebook.messenger.ShareToMessengerParams;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.gms.plus.PlusShare;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.iconics.view.IconicsImageView;
 import com.owncloud.android.lib.common.OwnCloudClient;
@@ -125,15 +124,21 @@ import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.BOX;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.DROPBOX;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.FLICKR;
 
+<<<<<<< HEAD
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.ONEDRIVE;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.GOOGLEDRIVE;
 
+=======
+>>>>>>> upstream/master
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.OTHERS;
 import static org.fossasia.phimpme.data.local.AccountDatabase.AccountName.TWITTER;
 import static org.fossasia.phimpme.utilities.Constants.BOX_CLIENT_ID;
 import static org.fossasia.phimpme.utilities.Constants.BOX_CLIENT_SECRET;
 import static org.fossasia.phimpme.utilities.Constants.FAIL;
+<<<<<<< HEAD
 import static org.fossasia.phimpme.utilities.Constants.PACKAGE_FACEBOOK;
+=======
+>>>>>>> upstream/master
 import static org.fossasia.phimpme.utilities.Constants.SUCCESS;
 import static org.fossasia.phimpme.utilities.Utils.checkNetwork;
 import static org.fossasia.phimpme.utilities.Utils.copyToClipBoard;
@@ -372,6 +377,7 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
                         shareToWhatsapp();
                         break;
 
+<<<<<<< HEAD
                     case GOOGLEPLUS:
                         shareToGoogle();
                         break;
@@ -384,6 +390,16 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
                         shareToSnapchat();
                         break;
 
+=======
+                    case MESSENGER:
+                        shareToMessenger();
+                        break;
+                    
+                    case SNAPCHAT:
+                        shareToSnapchat();
+                        break;
+
+>>>>>>> upstream/master
                     default:
                         SnackBarHandler.show(parent, R.string.feature_not_present);
                 }
@@ -462,6 +478,7 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
         }
     }
 
+<<<<<<< HEAD
     private void shareToGoogle() {
         NotificationHandler.make(R.string.googlePlus, R.string.upload_progress, R.drawable.ic_cloud_upload_black_24dp);
         Uri uri = getImageUri(SharingActivity.this, saveFilePath);
@@ -473,6 +490,8 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
     }
 
 
+=======
+>>>>>>> upstream/master
     private class UploadToBox extends AsyncTask<Void, Integer, Void> {
         private FileInputStream inputStream;
         private File file;
@@ -633,6 +652,7 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
                 NotificationHandler.actionPassed(R.string.upload_complete);
                 SnackBarHandler.show(parent, R.string.uploaded_dropbox);
                 sendResult(Constants.SUCCESS);
+<<<<<<< HEAD
             } else {
                 NotificationHandler.actionFailed();
                 SnackBarHandler.show(parent, R.string.upload_failed);
@@ -709,11 +729,59 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
                 NotificationHandler.actionPassed(R.string.upload_complete);
                 SnackBarHandler.show(parent, R.string.uploaded_googledrive);
                 sendResult(Constants.SUCCESS);
+=======
+>>>>>>> upstream/master
             } else {
                 NotificationHandler.actionFailed();
                 SnackBarHandler.show(parent, R.string.upload_failed);
                 sendResult(FAIL);
+<<<<<<< HEAD
             }
+        }
+    }
+    
+    private class UploadToOneDrive extends AsyncTask<Void,Void,Void>{
+        Boolean success;
+
+        @Override
+        protected void onPreExecute() {
+            NotificationHandler.make(R.string.onedrive_share,R.string.uploading,R.drawable.ic_onedrive_black);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            File file = new File(saveFilePath);
+            FileInputStream fileInputStream = null;
+            try{
+                fileInputStream = new FileInputStream(file);
+                if(cloudRailServices.checkOneDriveFolderExist()){
+                    cloudRailServices.getOneDrive().upload(cloudRailServices.getOneDriveFolderPath()+"/"+file.getName(),fileInputStream
+                    ,file.length(),true);
+                    success = true;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                success = false;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(success) {
+                NotificationHandler.actionPassed(R.string.upload_complete);
+                SnackBarHandler.show(parent, R.string.uploaded_onedrive);
+                sendResult(Constants.SUCCESS);
+=======
+>>>>>>> upstream/master
+            }
+            else{
+                NotificationHandler.actionFailed();
+                SnackBarHandler.show(parent,R.string.upload_failed);
+                sendResult(FAIL);
+            }
+
         }
     }
     
@@ -759,6 +827,7 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
 
         }
     }
+
 
 
     @Override
@@ -982,6 +1051,7 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
         });
     }
 
+<<<<<<< HEAD
     private void shareToFacebook() {
         PackageManager packageManager = (ActivitySwitchHelper.context).getPackageManager();
         if (isAppInstalled(PACKAGE_FACEBOOK, packageManager)) {
@@ -1004,6 +1074,8 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
     }
 
 
+=======
+>>>>>>> upstream/master
     private void shareToOthers() {
         Uri uri = Uri.fromFile(new File(saveFilePath));
         Intent shareIntent = new Intent();
@@ -1014,6 +1086,7 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
         startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_image)));
         triedUploading = true;
         sendResult(SUCCESS);
+<<<<<<< HEAD
     }
 
     private void copyCaption() {
@@ -1046,6 +1119,40 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
         AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
     }
 
+=======
+    }
+
+    private void copyCaption() {
+
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SharingActivity.this, getDialogStyle());
+        String msg = getString(R.string.copy_caption);
+        AlertDialogsHelper.getTextDialog(SharingActivity.this, dialogBuilder, R.string.caption, 0, msg);
+        dialogBuilder.setPositiveButton(R.string.answer_yes, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //copied caption to clipboard
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("caption", caption);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(SharingActivity.this, R.string.caption_copied,
+                        Toast.LENGTH_LONG).show();
+
+                shareToInstagram();
+            }
+        });
+        dialogBuilder.setNegativeButton(R.string.answer_no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                shareToInstagram();
+            }
+        });
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+        AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
+    }
+
+>>>>>>> upstream/master
 
     private void shareToInstagram(){
         Uri uri = Uri.fromFile(new File(saveFilePath));

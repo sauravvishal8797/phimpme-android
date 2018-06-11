@@ -363,6 +363,10 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                     invalidateOptionsMenu();
                     if(!favsearch(getAlbum().getMedia(position).getPath())){
                         bottomMenu.findItem(R.id.action_favourites).getIcon().clearColorFilter();
+<<<<<<< HEAD
+=======
+                        //bottomMenu.findItem(R.id.action_favourites).setIcon(R.drawable.ic_favourite_white_24dp);
+>>>>>>> upstream/master
                     }else{
                         bottomMenu.findItem(R.id.action_favourites).getIcon().setColorFilter(getAccentColor(), PorterDuff.Mode.SRC_IN);
                     }
@@ -374,6 +378,8 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
             adapter = new ImageAdapter(LFMainActivity.listAll, basicCallBack, this, this);
             getSupportActionBar().setTitle(all_photo_pos + 1 + " " + getString(R.string.of) + " " + size_all);
             current_image_pos = all_photo_pos;
+<<<<<<< HEAD
+=======
             mViewPager.setOnPageChangeListener(new PagerRecyclerView.OnPageChangeListener() {
                 @Override
                 public void onPageChanged(int oldPosition, int position) {
@@ -381,6 +387,30 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                     getAlbum().setCurrentPhotoIndex(getAlbum().getCurrentMediaIndex());
                     toolbar.setTitle((position + 1) + " " + getString(R.string.of) + " " + size_all);
                     invalidateOptionsMenu();
+                    if(!favsearch(getAlbum().getMedia(position).getPath())){
+                        bottomMenu.findItem(R.id.action_favourites).getIcon().clearColorFilter();
+                        //bottomMenu.findItem(R.id.action_favourites).setIcon(R.drawable.ic_favourite_white_24dp);
+                    }else{
+                        bottomMenu.findItem(R.id.action_favourites).getIcon().setColorFilter(getAccentColor(), PorterDuff.Mode.SRC_IN);
+                    }
+                    pathForDescription = listAll.get(position).getPath();
+                }
+            });
+            mViewPager.scrollToPosition(all_photo_pos);
+
+        } else if(!allPhotoMode && favphotomode && !upoadhis){
+            adapter = new ImageAdapter(favouriteslist, basicCallBack, this, this);
+            getSupportActionBar().setTitle(all_photo_pos + 1 + " " + getString(R.string.of) + " " + size_all);
+            current_image_pos = all_photo_pos;
+>>>>>>> upstream/master
+            mViewPager.setOnPageChangeListener(new PagerRecyclerView.OnPageChangeListener() {
+                @Override
+                public void onPageChanged(int oldPosition, int position) {
+                    current_image_pos = position;
+                    getAlbum().setCurrentPhotoIndex(getAlbum().getCurrentMediaIndex());
+                    toolbar.setTitle((position + 1) + " " + getString(R.string.of) + " " + size_all);
+                    invalidateOptionsMenu();
+<<<<<<< HEAD
                     if(!favsearch(getAlbum().getMedia(position).getPath())){
                         bottomMenu.findItem(R.id.action_favourites).getIcon().clearColorFilter();
                     }else{
@@ -401,6 +431,8 @@ public class SingleMediaActivity extends SharedMediaActivity implements ImageAda
                     getAlbum().setCurrentPhotoIndex(getAlbum().getCurrentMediaIndex());
                     toolbar.setTitle((position + 1) + " " + getString(R.string.of) + " " + size_all);
                     invalidateOptionsMenu();
+=======
+>>>>>>> upstream/master
                     pathForDescription = favouriteslist.get(position).getPath();
                 }
             });
