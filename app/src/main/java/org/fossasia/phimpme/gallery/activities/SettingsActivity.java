@@ -648,6 +648,7 @@ public class SettingsActivity extends ThemedActivity {
                 SP.putInt(getString(R.string.preference_primary_color), colorPicker2.getColor());
                 updateTheme();
                 accentcolourchange(colorPicker2.getColor());
+
                 if(swNavBar.isChecked())
                 setNavBarColor();
 
@@ -697,6 +698,7 @@ public class SettingsActivity extends ThemedActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
         AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL}, getAccentColor(), alertDialog);
+
     }
 
     private void setColor(final LineColorPicker colorPicker, final LineColorPicker colorPicker2, final TextView dialogTitle) {
