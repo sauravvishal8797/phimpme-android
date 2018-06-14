@@ -21,7 +21,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         resConfigs "en"
         ndk {
-            abiFilters 'armeabi-v7a','x86'
+            abiFilters 'armeabi-v7a', 'x86'
         }
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
@@ -181,6 +181,10 @@ dependencies {
 
     //photoview
     compile project(':photoview')
+
+    //compressor
+    compile 'id.zelory:compressor:2.1.0'
+
 }
 
 buildscript {
