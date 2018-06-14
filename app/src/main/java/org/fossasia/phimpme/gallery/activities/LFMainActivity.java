@@ -1595,6 +1595,7 @@ public class LFMainActivity extends SharedMediaActivity {
         else
             starImageView.setColorFilter(ContextCompat.getColor(this, R.color.accent_grey), PorterDuff.Mode.SRC_ATOP);
     }
+
     private void showsnackbar(Boolean result) {
         if(result) {
             SnackBarHandler.show(mDrawerLayout,getApplicationContext().getString(R.string.photo_deleted_msg), navigationView.getHeight());
@@ -2225,7 +2226,6 @@ public class LFMainActivity extends SharedMediaActivity {
                         setResult(RESULT_OK, result);
                     }
                 }
-
 
                 String extension = files.get(0).getPath().substring(files.get(0).getPath().lastIndexOf('.') + 1);
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
@@ -3009,7 +3009,6 @@ public class LFMainActivity extends SharedMediaActivity {
             invalidateOptionsMenu();
         }
     }
-
 
     private static class PrepareAlbumTask extends AsyncTask<Void, Integer, Void> {
 

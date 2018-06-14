@@ -9,9 +9,6 @@ import com.cloudrail.si.exceptions.AuthenticationException;
 import com.cloudrail.si.exceptions.ParseException;
 import com.cloudrail.si.interfaces.CloudStorage;
 import com.cloudrail.si.services.Dropbox;
-import com.cloudrail.si.services.GoogleDrive;
-import com.cloudrail.si.services.OneDrive;
-
 import org.fossasia.phimpme.utilities.BasicCallBack;
 import org.fossasia.phimpme.utilities.Constants;
 
@@ -31,11 +28,11 @@ public class CloudRailServices {
     private final AtomicReference<CloudStorage> dropbox = new AtomicReference<>();
     private Activity context = null;
     DropboxLogin dropboxLogin;
-    public GoogleDrive googleDrive;
+    //public GoogleDrive googleDrive;
     public static BasicCallBack basicCallBack;
     private boolean isisignedcancel = false;
     public Dropbox db;
-    public OneDrive oneDrive;
+    //public OneDrive oneDrive;
 
     public static CloudRailServices getInstance(){
         return instance;
@@ -55,22 +52,14 @@ public class CloudRailServices {
         dropbox.set(db);
     }
 
-    private void initOneDrive(){
+   /* private void initOneDrive(){
         oneDrive = new OneDrive(context,Constants.ONE_DRIVE_APP_ID,Constants.ONE_DRIVE_SECRET);
-    }
+    }*/
 
     public void prepare(Activity context) {
         this.context= context;
         CloudRail.setAppKey(CLOUDRAIL_LICENSE_KEY);
         this.initDropbox();
-        this.initOneDrive();
-        this.initGoogleDrive();
-    }
-
-    private void initGoogleDrive(){
-      
-        googleDrive = new GoogleDrive(context,Constants.GOOGLEDRIVE_APP_KEY,Constants.GOOGLEDRIVE_SECRET_KEY
-        ,"org.fossasia.phimpme:/oauth2redirect","login-googledrive");
     }
 
     public String getToken() {
@@ -90,7 +79,6 @@ public class CloudRailServices {
     }
 
    public class DropboxLogin extends AsyncTask<Void,Void,Void>{
-
 
        @Override
        protected void onPostExecute(Void aVoid) {
@@ -149,11 +137,10 @@ public class CloudRailServices {
        return db.exists(FOLDER);
    }
 
-   public boolean checkOneDriveFolderExist(){ return oneDrive.exists(FOLDER);}
+  // public boolean checkOneDriveFolderExist(){ return oneDrive.exists(FOLDER);}
 
    public String getOneDriveFolderPath() { return (FOLDER);}
 
-   public OneDrive getOneDrive(){ return  oneDrive;}
+  // public OneDrive getOneDrive(){ return  oneDrive;}
 
 }
-

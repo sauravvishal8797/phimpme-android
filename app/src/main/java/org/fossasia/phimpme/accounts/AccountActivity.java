@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -109,6 +110,8 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
     RecyclerView accountsRecyclerView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.bottombar)
+    BottomNavigationView bottomNavigationView;
     @BindView(R.id.accounts)
     CoordinatorLayout coordinatorLayout;
     private AccountAdapter accountAdapter;
@@ -145,8 +148,8 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         callbackManager = CallbackManager.Factory.create();
         setSupportActionBar(toolbar);
         loginManager = LoginManager.getInstance();
-        toolbar.setPopupTheme(getPopupToolbarStyle());
         ThemeHelper themeHelper = new ThemeHelper(getContext());
+        toolbar.setPopupTheme(getPopupToolbarStyle());
         toolbar.setBackgroundColor(themeHelper.getPrimaryColor());
         setUpRecyclerView();
         accountPresenter.loadFromDatabase();  // Calling presenter function to load data from database
@@ -238,7 +241,6 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         if (!signInSignOut.isChecked()) {
             if (!checkNetwork(this, parentLayout)) return;
             switch (AccountDatabase.AccountName.values()[position]) {
-
                 case TWITTER:
                     signInTwitter();
                     break;
@@ -491,6 +493,56 @@ public class AccountActivity extends ThemedActivity implements AccountContract.V
         LoginActivity.setBasicCallBack(basicCallBack);
         startActivity(i);
     }
+
+    /**
+     * Create Facebook login and session
+     */
+   /* public void signInFacebook() {
+        List<String> permissionNeeds = Arrays.asList("publish_actions");
+        loginManager = LoginManager.getInstance();
+        loginManager.logInWithPublishPermissions(this, permissionNeeds);
+        //loginManager.logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
+        loginManager.registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        realm.beginTransaction();
+                        account = realm.createObject(AccountDatabase.class, FACEBOOK.toString());
+                        account.setUsername(loginResult.getAccessToken().getUserId());
+
+                        GraphRequest request = GraphRequest.newMeRequest(
+                                loginResult.getAccessToken(),
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(@NonNls JSONObject jsonObject, GraphResponse graphResponse) {
+                                        Log.v("LoginActivity", graphResponse.toString());
+                                        try {
+                                            account.setUsername(jsonObject.getString("name"));
+                                            realm.commitTransaction();
+                                            SnackBarHandler.show(coordinatorLayout, getString(R.string.logged_in_facebook));
+                                        } catch (JSONException e) {
+                                            Log.e("LoginAct", e.toString());
+                                        }
+                                    }
+                                });
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "id,name");
+                        request.setParameters(parameters);
+                        request.executeAsync();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        SnackBarHandler.show(coordinatorLayout, getString(R.string.facebook_login_cancel));
+                    }
+
+                    @Override
+                    public void onError(FacebookException e) {
+                        SnackBarHandler.show(coordinatorLayout, getString(R.string.facebook_login_error));
+                        Log.d("error", e.toString());
+                    }
+                });
+    }*/
 
     @Override
     public Context getContext() {

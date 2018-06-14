@@ -605,47 +605,6 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
                 NotificationHandler.actionPassed(R.string.upload_complete);
                 SnackBarHandler.show(parent, R.string.uploaded_dropbox);
                 sendResult(Constants.SUCCESS);
-            } else {
-                NotificationHandler.actionFailed();
-                SnackBarHandler.show(parent, R.string.upload_failed);
-                sendResult(FAIL);
-            }
-        }
-    }
-    
-    private class UploadToOneDrive extends AsyncTask<Void,Void,Void>{
-        Boolean success;
-
-        @Override
-        protected void onPreExecute() {
-            NotificationHandler.make(R.string.onedrive_share,R.string.uploading,R.drawable.ic_onedrive_black);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            File file = new File(saveFilePath);
-            FileInputStream fileInputStream = null;
-            try{
-                fileInputStream = new FileInputStream(file);
-                if(cloudRailServices.checkOneDriveFolderExist()){
-                    cloudRailServices.getOneDrive().upload(cloudRailServices.getOneDriveFolderPath()+"/"+file.getName(),fileInputStream
-                    ,file.length(),true);
-                    success = true;
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                success = false;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if(success) {
-                NotificationHandler.actionPassed(R.string.upload_complete);
-                SnackBarHandler.show(parent, R.string.uploaded_onedrive);
-                sendResult(Constants.SUCCESS);
             }
             else{
                 NotificationHandler.actionFailed();
@@ -919,7 +878,6 @@ public class SharingActivity extends ThemedActivity implements View.OnClickListe
         alertDialog.show();
         AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
     }
-
 
     private void shareToInstagram(){
         Uri uri = Uri.fromFile(new File(saveFilePath));

@@ -171,7 +171,6 @@ public class FlickrActivity extends ThemedActivity {
                 Flickr f = FlickrHelper.getInstance().getFlickr();
                 OAuthToken oauthToken = f.getOAuthInterface().getRequestToken(
                         OAUTH_CALLBACK_URI.toString());
-                Log.i("kakakakakaka", oauthToken.getOauthToken().toString());
                 //saveTokenSecrent(oauthToken.getOauthToken(), oauthToken.getOauthTokenSecret());
                 URL oauthUrl = f.getOAuthInterface().buildAuthenticationUrl(
                         Permission.WRITE, oauthToken);

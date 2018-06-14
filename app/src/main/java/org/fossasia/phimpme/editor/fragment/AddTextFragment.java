@@ -286,5 +286,6 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher, Fo
         if(MyApplication.isLeakCanaryInstalled){
             MyApplication.getRefWatcher(getActivity()).watch(this);
         }
+
     }
 }

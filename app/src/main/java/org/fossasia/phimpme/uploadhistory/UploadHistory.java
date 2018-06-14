@@ -28,6 +28,9 @@ import org.fossasia.phimpme.gallery.activities.SingleMediaActivity;
 import org.fossasia.phimpme.gallery.data.Media;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
