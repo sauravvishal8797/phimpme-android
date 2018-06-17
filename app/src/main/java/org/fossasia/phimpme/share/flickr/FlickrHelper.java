@@ -124,4 +124,6 @@ public final class FlickrHelper {
         });
         taskUpload.execute(getOAuthToken());
     }
+
+
 }

@@ -1,7 +1,6 @@
 package org.fossasia.phimpme.accounts;
 
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -34,15 +33,10 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     public int switchBackgroundColor;
     private ThemeHelper themeHelper;
 
-    public AccountAdapter() {
+    public AccountAdapter(int switchColor, int switchBackgroundColor) {
+        this.switchAccentColor = switchColor;
+        this.switchBackgroundColor = switchBackgroundColor;
         themeHelper = new ThemeHelper(getContext());
-        updateTheme();
-        this.switchAccentColor = themeHelper.getAccentColor();
-        this.switchBackgroundColor = themeHelper.getPrimaryColor();
-    }
-
-    public void updateTheme() {
-        themeHelper.updateTheme();
     }
 
     @Override
@@ -94,8 +88,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             holder.accountName.setTextColor(ContextCompat.getColor(getContext(), id));
             holder.accountAvatar.setColorFilter(ContextCompat.getColor(getContext(), id));
         }
-
-        holder.cardView.setCardBackgroundColor(themeHelper.getCardBackgroundColor());
     }
 
     @Override
@@ -125,9 +117,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
         @BindView(R.id.sign_in_sign_out_switch)
         SwitchCompat signInSignOutSwitch;
-
-        @BindView(R.id.card_view)
-        CardView cardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
