@@ -5,9 +5,7 @@
 
   <include
       android:id="@+id/toolbar"
-      layout="@layout/toolbar"
-      android:background="@color/md_dark_appbar"
-      android:windowActionBarOverlay="true" />
+      layout="@layout/toolbar" />
 
   <ImageView android:layout_width="wrap_content"
              android:layout_height="wrap_content"

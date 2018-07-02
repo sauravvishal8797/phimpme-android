@@ -74,6 +74,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.view.IconicsImageView;
 
 import org.fossasia.phimpme.R;
+import org.fossasia.phimpme.TrashBin.TrashBinActivity;
 import org.fossasia.phimpme.base.SharedMediaActivity;
 import org.fossasia.phimpme.data.local.FavouriteImagesModel;
 import org.fossasia.phimpme.data.local.ImageDescModel;
@@ -141,7 +142,7 @@ public class LFMainActivity extends SharedMediaActivity {
     private LFMainActivity activityContext;
     private int REQUEST_CODE_SD_CARD_PERMISSIONS = 42;
     private static final int BUFFER = 80000;
-    private boolean about = false, settings = false, uploadHistory = false, favourites = false;
+    private boolean about = false, settings = false, uploadHistory = false, favourites = false, trashbin = false;
     private CustomAlbumsHelper customAlbumsHelper = CustomAlbumsHelper.getInstance(LFMainActivity.this);
     private PreferenceUtil SP;
     private SecurityHelper securityObj;
@@ -205,6 +206,8 @@ public class LFMainActivity extends SharedMediaActivity {
     protected TextView drawerRateText;
     @BindView(R.id.Drawer_Upload_Item)
     protected TextView drawerUploadText;
+    @BindView(R.id.Drawer_trash_Item)
+    protected TextView drawerTrashText;
     @BindView(R.id.Drawer_Setting_Icon)
     protected IconicsImageView drawerSettingIcon;
     @BindView(R.id.Drawer_About_Icon)
@@ -215,6 +218,8 @@ public class LFMainActivity extends SharedMediaActivity {
     protected IconicsImageView drawerRateIcon;
     @BindView(R.id.Drawer_Upload_Icon)
     protected IconicsImageView drawerUploadIcon;
+    @BindView(R.id.Drawer_trash_Icon)
+    protected IconicsImageView drawerTrashIcon;
     @BindView(R.id.drawer_scrollbar)
     protected ScrollView scrollView;
     @BindView(R.id.appbar_toolbar)
@@ -1123,6 +1128,10 @@ public class LFMainActivity extends SharedMediaActivity {
                 } else if (favourites) {
                     displayfavourites();
                     favourites = false;
+                } else if(trashbin){
+                    Intent intent1 = new Intent(LFMainActivity.this, TrashBinActivity.class);
+                    startActivity(intent1);
+                    trashbin = false;
                 }
             }
 
@@ -1300,6 +1309,7 @@ public class LFMainActivity extends SharedMediaActivity {
         drawerShareText.setTextColor(color);
         drawerRateText.setTextColor(color);
         drawerUploadText.setTextColor(color);
+        drawerTrashText.setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_Default_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_Setting_Item)).setTextColor(color);
 
@@ -1308,6 +1318,7 @@ public class LFMainActivity extends SharedMediaActivity {
         ((TextView) findViewById(R.id.Drawer_share_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_rate_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_Upload_Item)).setTextColor(color);
+        ((TextView) findViewById(R.id.Drawer_trash_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.Drawer_favourite_Item)).setTextColor(color);
 
         /** ICONS **/
@@ -1319,6 +1330,7 @@ public class LFMainActivity extends SharedMediaActivity {
         drawerShareIcon.setColor(color);
         drawerRateIcon.setColor(color);
         drawerUploadIcon.setColor(color);
+        drawerTrashIcon.setColor(color);
         favicon.setColor(color);
 
         // Default setting
@@ -1357,6 +1369,15 @@ public class LFMainActivity extends SharedMediaActivity {
             public void onClick(View v) {
                 uploadHistory = true;
                 mDrawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
+
+        findViewById(R.id.ll_drawer_trashbin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trashbin = true;
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                //toolbar.setTitle("Trash Bin");
             }
         });
 
