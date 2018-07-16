@@ -16,12 +16,16 @@ public class AccountDatabase extends RealmObject{
 
 
     public enum AccountName {
-        FACEBOOK, TWITTER, NEXTCLOUD
+        TWITTER, NEXTCLOUD
         //, DRUPAL, WORDPRESS
+<<<<<<< HEAD
         , PINTEREST, FLICKR, IMGUR, DROPBOX, OWNCLOUD, BOX, TUMBLR
         , INSTAGRAM, WHATSAPP, MESSENGER ,GOOGLEPLUS, OTHERS
+=======
+        , PINTEREST, FLICKR, IMGUR, DROPBOX, OWNCLOUD, BOX, TUMBLR, INSTAGRAM, WHATSAPP, MESSENGER , SNAPCHAT, OTHERS
+>>>>>>> upstream/development
     }
-    public static int HIDEINACCOUNTS = 5;
+    public static int HIDEINACCOUNTS = 6;
 
     @PrimaryKey
     String name;
