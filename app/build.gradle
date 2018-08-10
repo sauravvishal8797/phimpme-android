@@ -77,18 +77,8 @@ android {
 }
 
 repositories {
-    maven {
-        url "https://dl.bintray.com/dasar/maven"
-    }
     mavenCentral()
-    maven {
-        url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
-    }
     maven { url "https://jitpack.io" }
-
-    maven { url 'https://maven.fabric.io/public' }
-
-    maven { url "https://mvnrepository.com/artifact/com.box/box-android-sdk" }
 }
 
 
@@ -135,7 +125,6 @@ dependencies {
 
     //ui
     compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'uz.shift:colorpicker:0.5@aar'
     compile 'com.turingtechnologies.materialscrollbar:lib:10.0.3'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
     compile 'com.github.shchurov:horizontalwheelview:0.9.5'
@@ -163,9 +152,6 @@ dependencies {
     compile('com.tumblr:jumblr:0.0.11') {
         exclude module: 'scribe'
     }
-
-    //realm
-    compile 'com.uphyca:stetho_realm:2.0.0'
 
     //metadataextractor
     compile 'com.drewnoakes:metadata-extractor:2.9.1'

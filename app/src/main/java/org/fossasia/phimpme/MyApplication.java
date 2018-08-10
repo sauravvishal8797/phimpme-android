@@ -22,7 +22,6 @@ import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
-import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 //import io.fabric.sdk.android.Fabric;
 

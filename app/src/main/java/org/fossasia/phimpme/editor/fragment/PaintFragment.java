@@ -29,9 +29,6 @@ import org.fossasia.phimpme.editor.view.CustomPaintView;
 import org.fossasia.phimpme.editor.view.PaintModeView;
 import org.fossasia.phimpme.gallery.util.ColorPalette;
 
-import uz.shift.colorpicker.LineColorPicker;
-import uz.shift.colorpicker.OnColorChangedListener;
-
 
 public class PaintFragment extends BaseEditFragment implements View.OnClickListener, ColorListAdapter.IColorListAction {
 
@@ -161,43 +158,9 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
 
     @Override
     public void onMoreSelected(int position) {
-        selectPaintColor();
+
     }
 
-    private void selectPaintColor() {
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        final View dialogLayout = getActivity().getLayoutInflater().inflate(R.layout.color_piker_accent, null);
-        final LineColorPicker colorPicker = (LineColorPicker) dialogLayout.findViewById(R.id.color_picker_accent);
-        final TextView dialogTitle = (TextView) dialogLayout.findViewById(R.id.cp_accent_title);
-        dialogTitle.setText(R.string.paint_color_title);
-        colorPicker.setColors(ColorPalette.getAccentColors(activity.getApplicationContext()));
-        colorPicker.setOnColorChangedListener(new OnColorChangedListener() {
-            @Override
-            public void onColorChanged(int c) {
-                dialogTitle.setBackgroundColor(c);
-
-            }
-        });
-        dialogBuilder.setView(dialogLayout);
-        dialogBuilder.setNeutralButton(getString(R.string.cancel).toUpperCase(), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.setPositiveButton(getString(R.string.ok_action).toUpperCase(), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                setPaintColor(colorPicker.getColor());
-            }
-        });
-        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                dialog.dismiss();
-            }
-        });
-        dialogBuilder.show();
-    }
 
     protected void setPaintColor(final int paintColor) {
         mPaintModeView.setPaintStrokeColor(paintColor);

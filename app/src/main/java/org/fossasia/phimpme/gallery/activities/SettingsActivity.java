@@ -51,8 +51,6 @@ import org.fossasia.phimpme.utilities.SnackBarHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uz.shift.colorpicker.LineColorPicker;
-import uz.shift.colorpicker.OnColorChangedListener;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -136,21 +134,6 @@ public class SettingsActivity extends ThemedActivity {
             }
         });
 
-        /*** PRIMARY COLOR PIKER ***/
-        findViewById(R.id.ll_primaryColor).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                primaryColorPiker();
-            }
-        });
-
-        /*** ACCENT COLOR PIKER ***/
-        findViewById(R.id.ll_accentColor).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                accentColorPiker();
-            }
-        });
 
         /*** EXCLUDED ALBUMS INTENT ***/
         findViewById(R.id.ll_excluded_album).setOnClickListener(new View.OnClickListener() {
@@ -616,72 +599,6 @@ public class SettingsActivity extends ThemedActivity {
         AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE}, getAccentColor(), alertDialog);
     }
 
-    private void primaryColorPiker(){
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SettingsActivity.this, getDialogStyle());
-
-        final View dialogLayout = getLayoutInflater().inflate(R.layout.color_piker_primary, null);
-        final LineColorPicker colorPicker = (LineColorPicker) dialogLayout.findViewById(R.id.color_picker_primary);
-        final LineColorPicker colorPicker2 = (LineColorPicker) dialogLayout.findViewById(R.id.color_picker_primary_2);
-        final TextView dialogTitle = (TextView) dialogLayout.findViewById(R.id.cp_primary_title);
-        CardView dialogCardView = (CardView) dialogLayout.findViewById(R.id.cp_primary_card);
-        dialogCardView.setCardBackgroundColor(getCardBackgroundColor());
-
-        setColor(colorPicker, colorPicker2, dialogTitle);
-
-        dialogBuilder.setView(dialogLayout);
-
-        dialogBuilder.setNeutralButton(getString(R.string.cancel).toUpperCase(), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (isTranslucentStatusBar()) {
-                        getWindow().setStatusBarColor(ColorPalette.getObscuredColor(getPrimaryColor()));
-                    } else getWindow().setStatusBarColor(getPrimaryColor());
-                }
-                toolbar.setBackgroundColor(getPrimaryColor());
-                dialog.cancel();
-            }
-        });
-
-        dialogBuilder.setPositiveButton(getString(R.string.ok_action).toUpperCase(), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                SP.putInt(getString(R.string.preference_primary_color), colorPicker2.getColor());
-                updateTheme();
-                accentcolourchange(colorPicker2.getColor());
-                if(swNavBar.isChecked())
-                setNavBarColor();
-
-                setScrollViewColor(scr);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (isTranslucentStatusBar()) {
-                        getWindow().setStatusBarColor(ColorPalette.getObscuredColor(getPrimaryColor()));
-                    } else {
-                        getWindow().setStatusBarColor(getPrimaryColor());
-                    }
-                }
-            }
-        });
-
-        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (isTranslucentStatusBar()) {
-                        getWindow().setStatusBarColor(ColorPalette.getObscuredColor(getPrimaryColor()));
-                    } else getWindow().setStatusBarColor(getPrimaryColor());
-                    if (isNavigationBarColored() && swNavBar.isChecked())
-                        getWindow().setNavigationBarColor(getPrimaryColor());
-                    else getWindow().setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), R.color.md_black_1000));
-                }
-                toolbar.setBackgroundColor(getPrimaryColor());
-
-            }
-        });
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
-        AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL}, getAccentColor(), alertDialog);
-    }
-
     private void accentcolourchange(final int color) {
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, getDialogStyle());
         AlertDialogsHelper.getTextDialog(SettingsActivity.this, builder,
@@ -695,99 +612,6 @@ public class SettingsActivity extends ThemedActivity {
             }
         });
         AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL}, getAccentColor(), alertDialog);
-    }
-
-    private void setColor(final LineColorPicker colorPicker, final LineColorPicker colorPicker2, final TextView dialogTitle) {
-        colorPicker.setColors(ColorPalette.getBaseColors(getApplicationContext()));
-        for (int i : colorPicker.getColors())
-            for (int i2 : ColorPalette.getColors(getBaseContext(), i))
-                if (i2 == getPrimaryColor()) {
-                    colorPicker.setSelectedColor(i);
-                    colorPicker2.setColors(ColorPalette.getColors(getBaseContext(), i));
-                    colorPicker2.setSelectedColor(i2);
-                    break;}
-
-        dialogTitle.setBackgroundColor(getPrimaryColor());
-
-        colorPicker.setOnColorChangedListener(new OnColorChangedListener() {
-            @Override
-            public void onColorChanged(int c) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (isTranslucentStatusBar()) {
-                        getWindow().setStatusBarColor(ColorPalette.getObscuredColor(getPrimaryColor()));
-                    } else getWindow().setStatusBarColor(c);
-                }
-
-                toolbar.setBackgroundColor(c);
-                dialogTitle.setBackgroundColor(c);
-                colorPicker2.setColors(ColorPalette.getColors(getApplicationContext(), colorPicker.getColor()));
-                colorPicker2.setSelectedColor(colorPicker.getColor());
-            }
-        });
-        colorPicker2.setOnColorChangedListener(new OnColorChangedListener() {
-            @Override
-            public void onColorChanged(int c) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    if (isTranslucentStatusBar()) {
-                        getWindow().setStatusBarColor(ColorPalette.getObscuredColor(c));
-                    } else getWindow().setStatusBarColor(c);
-                    if (isNavigationBarColored())
-                        getWindow().setNavigationBarColor(c);
-                    else
-                        getWindow().setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), R.color.md_black_1000));
-                }
-                toolbar.setBackgroundColor(c);
-                dialogTitle.setBackgroundColor(c);
-            }
-        });
-    }
-
-    private void accentColorPiker(){
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SettingsActivity.this, getDialogStyle());
-
-        final View dialogLayout = getLayoutInflater().inflate(R.layout.color_piker_accent, null);
-        final LineColorPicker colorPicker = (LineColorPicker) dialogLayout.findViewById(R.id.color_picker_accent);
-        final TextView dialogTitle = (TextView) dialogLayout.findViewById(R.id.cp_accent_title);
-        CardView cv = (CardView) dialogLayout.findViewById(R.id.cp_accent_card);
-        cv.setCardBackgroundColor(getCardBackgroundColor());
-
-        colorPicker.setColors(ColorPalette.getAccentColors(getApplicationContext()));
-        colorPicker.setSelectedColor(getAccentColor());
-        dialogTitle.setBackgroundColor(getAccentColor());
-
-        colorPicker.setOnColorChangedListener(new OnColorChangedListener() {
-            @Override
-            public void onColorChanged(int c) {
-                dialogTitle.setBackgroundColor(c);
-                updateViewswithAccentColor(colorPicker.getColor());
-
-            }
-        });
-        dialogBuilder.setView(dialogLayout);
-
-        dialogBuilder.setNeutralButton(getString(R.string.cancel).toUpperCase(), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                updateViewswithAccentColor(getAccentColor());
-            }
-        });
-        dialogBuilder.setPositiveButton(getString(R.string.ok_action).toUpperCase(), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                SP.putInt(getString(R.string.preference_accent_color), colorPicker.getColor());
-                updateTheme();
-                updateViewswithAccentColor(getAccentColor());
-            }
-        });
-        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                updateViewswithAccentColor(getAccentColor());
-            }
-        });
-        AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
         AlertDialogsHelper.setButtonTextColor(new int[]{DialogInterface.BUTTON_POSITIVE, DialogInterface.BUTTON_NEGATIVE, DialogInterface.BUTTON_NEUTRAL}, getAccentColor(), alertDialog);
     }
@@ -815,9 +639,9 @@ public class SettingsActivity extends ThemedActivity {
         updateSwitchColor(swApplyTheme_Viewer, getAccentColor());
 
 
-        final LineColorPicker transparencyColorPicker = (LineColorPicker) dialogLayout.findViewById(R.id.pickerTransparent);
-        transparencyColorPicker.setColors(ColorPalette.getTransparencyShadows(getPrimaryColor()));
-        transparencyColorPicker.setSelectedColor(ColorPalette.getTransparentColor(getPrimaryColor(), getTransparency()));
+        //final LineColorPicker transparencyColorPicker = (LineColorPicker) dialogLayout.findViewById(R.id.pickerTransparent);
+        //transparencyColorPicker.setColors(ColorPalette.getTransparencyShadows(getPrimaryColor()));
+        //transparencyColorPicker.setSelectedColor(ColorPalette.getTransparentColor(getPrimaryColor(), getTransparency()));
 
         /**TEXT VIEWS**/
         ((TextView) dialogLayout.findViewById(R.id.seek_bar_alpha_title)).setTextColor(getTextColor());
@@ -829,8 +653,8 @@ public class SettingsActivity extends ThemedActivity {
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences.Editor editor = SP.getEditor();
                 editor.putBoolean(getString(R.string.preference_apply_theme_pager), swApplyTheme_Viewer.isChecked());
-                int c = Color.alpha(transparencyColorPicker.getColor());
-                editor.putInt(getString(R.string.preference_transparency), 255 - c);
+               // int c = Color.alpha(transparencyColorPicker.getColor());
+               // editor.putInt(getString(R.string.preference_transparency), 255 - c);
                 editor.commit();
                 updateTheme();
             }
@@ -904,8 +728,8 @@ public class SettingsActivity extends ThemedActivity {
         ((IconicsImageView) findViewById(R.id.ll_switch_full_resolution_icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.traslucent_statusbar_icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.custom_3thact_icon)).setColor(color);
-        ((IconicsImageView) findViewById(R.id.primary_color_icon)).setColor(color);
-        ((IconicsImageView) findViewById(R.id.accent_color_icon)).setColor(color);
+        //((IconicsImageView) findViewById(R.id.primary_color_icon)).setColor(color);
+        //((IconicsImageView) findViewById(R.id.accent_color_icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.basic_theme_icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.n_columns_icon)).setColor(color);
         ((IconicsImageView) findViewById(R.id.nav_bar_icon)).setColor(color);
@@ -925,8 +749,8 @@ public class SettingsActivity extends ThemedActivity {
         ((TextView) findViewById(R.id.picture_orientation_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.custom_3thAct_title)).setTextColor(color);
         ((TextView) findViewById(R.id.Traslucent_StatusBar_Item)).setTextColor(color);
-        ((TextView) findViewById(R.id.PrimaryColor_Item)).setTextColor(color);
-        ((TextView) findViewById(R.id.accentColor_Item)).setTextColor(color);
+        //((TextView) findViewById(R.id.PrimaryColor_Item)).setTextColor(color);
+        //((TextView) findViewById(R.id.accentColor_Item)).setTextColor(color);
         ((TextView) findViewById(R.id.basic_theme_item)).setTextColor(color);
         ((TextView) findViewById(R.id.n_columns_Item_Title)).setTextColor(color);
         ((TextView) findViewById(R.id.NavBar_Item)).setTextColor(color);
@@ -945,8 +769,8 @@ public class SettingsActivity extends ThemedActivity {
         ((TextView) findViewById(R.id.custom_3thAct_Sub)).setTextColor(color);
         ((TextView) findViewById(R.id.picture_orientation_Item_Sub)).setTextColor(color);
         ((TextView) findViewById(R.id.Traslucent_StatusBar_Item_Sub)).setTextColor(color);
-        ((TextView) findViewById(R.id.PrimaryColor_Item_Sub)).setTextColor(color);
-        ((TextView) findViewById(R.id.accentColor_Item_Sub)).setTextColor(color);
+       // ((TextView) findViewById(R.id.PrimaryColor_Item_Sub)).setTextColor(color);
+        //((TextView) findViewById(R.id.accentColor_Item_Sub)).setTextColor(color);
         ((TextView) findViewById(R.id.basic_theme_item_sub)).setTextColor(color);
         ((TextView) findViewById(R.id.n_columns_Item_Title_Sub)).setTextColor(color);
         ((TextView) findViewById(R.id.NavBar_Item_Sub)).setTextColor(color);
